@@ -1,14 +1,16 @@
+require("dotenv").config();
+require("./models/Unit");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-require("./models/Unit");
-
+const port = process.env.PORT || 3000
 app.use(bodyParser.json());
+
 
 const Unit = mongoose.model("unit");
 const mongoUri =
-  "mongodb+srv://nhaphuong:!2345@cluster0.i3iqx2l.mongodb.net/?retryWrites=true&w=majority";
+  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.i3iqx2l.mongodb.net/?retryWrites=true&w=majority`;
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -75,5 +77,5 @@ app.post("/update", (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log("server is running");
+  console.log(`server is running example is listening at http://localhost:${port}`);
 });
