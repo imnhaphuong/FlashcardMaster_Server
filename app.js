@@ -9,11 +9,14 @@ const port = process.env.PORT || 3000;
 //Require routes
 const test = require("./routes/test");
 const classAPI = require("./routes/class");
+const userAPI = require("./routes/user");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/test", test);
 app.use("/api/class", classAPI);
+app.use("/api/user", userAPI);
+
 
 //Kết nối mongodb
 const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.i3iqx2l.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
