@@ -23,8 +23,8 @@ router.post("/create", (req, res) => {
   my_class
     .save()
     .then((data) => {
-      res.send("created class success");
-      console.log(data);
+      res.send(data);
+      console.log('create new class success');
     })
     .catch((err) => {
       console.log("err", err);
