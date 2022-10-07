@@ -18,20 +18,15 @@ router.get("/", (req, res) => {
 router.post("/create", (req, res) => {
   const my_user = new User({
     email: req.body.email,
-    fullName: req.body.fullName,
     password: req.body.password,
-    avatar: req.body.avatar,
-    unitCreated: req.body.unitCreated,
-    flashcardCreated: req.body.flashcardCreated,
-    scores: req.body.scores,
-    dayActive: req.body.dayActive,
-    type: req.body.type,
+
   });
   my_user
     .save()
-    .then((data) => {
-      res.send("created User success");
-      console.log(data);
+    .then((data) => {  
+         
+      res.send(data);
+      console.log("created User success");  
     })
     .catch((err) => {
       console.log("err", err);
