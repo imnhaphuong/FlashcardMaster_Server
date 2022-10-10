@@ -29,4 +29,14 @@ module.exports = {
         console.log("err", err);
       });
   },
+  deleteClass(req, res) {
+    Class.findByIdAndRemove(req.body.id)
+      .then((data) => {
+        res.send("deleted");
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
 };

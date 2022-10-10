@@ -11,16 +11,7 @@ router.get("/", (req, res) => {
 
 router.post("/create", controller.createClass(req, res));
 
-// router.post("/delete", (req, res) => {
-//   Unit.findByIdAndRemove(req.body.id)
-//     .then((data) => {
-//       res.send("deleted");
-//       console.log(data);
-//     })
-//     .catch((err) => {
-//       console.log("err", err);
-//     });
-// });
+router.post("/delete", controller.deleteClass(req, res));
 
 // router.post("/update", (req, res) => {
 //   Unit.findByIdAndUpdate(req.body.id, {
