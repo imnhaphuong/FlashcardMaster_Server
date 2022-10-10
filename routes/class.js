@@ -9,9 +9,13 @@ router.get("/", (req, res) => {
   controller.getAllClasses(req, res);
 });
 
-router.post("/create", controller.createClass(req, res));
+router.post("/create", (req, res) => {
+  controller.createClass(req, res);
+});
 
-router.post("/delete", controller.deleteClass(req, res));
+router.post("/delete", (req, res) => {
+  controller.deleteClass(req, res);
+});
 
 // router.post("/update", (req, res) => {
 //   Unit.findByIdAndUpdate(req.body.id, {
