@@ -19,6 +19,7 @@ router.post("/create", (req, res) => {
   const my_class = new Class({
     name: req.body.name,
     creator: req.body.creator,
+    mode: req.body.mode,
   });
   my_class
     .save()
