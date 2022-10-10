@@ -3,34 +3,13 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const Class = require("../models/Class");
 
+const controller = require("../controllers/classController");
+
 router.get("/", (req, res) => {
-  console.log("got all classes");
-  Class.find({})
-    .then((data) => {
-      console.log("got all");
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log("err", err);
-    });
+  controller.getAllClasses(req, res);
 });
 
-router.post("/create", (req, res) => {
-  const my_class = new Class({
-    name: req.body.name,
-    creator: req.body.creator,
-    mode: req.body.mode,
-  });
-  my_class
-    .save()
-    .then((data) => {
-      res.send(data);
-      console.log('create new class success');
-    })
-    .catch((err) => {
-      console.log("err", err);
-    });
-});
+router.post("/create", controller.createClass(req, res));
 
 // router.post("/delete", (req, res) => {
 //   Unit.findByIdAndRemove(req.body.id)
