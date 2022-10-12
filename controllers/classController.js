@@ -2,19 +2,14 @@ const Class = require("../models/Class");
 
 module.exports = {
   getAllClasses(req, res) {
-    if (req.body.id == null) {
-      Class.find({})
+    Class.find({})
       .then((data) => {
-
         console.log("got all classes");
         res.send(data);
       })
       .catch((err) => {
         console.log("err", err);
       });
-    } else{
-      }
-
   },
 
   getClassById(req, res) {
