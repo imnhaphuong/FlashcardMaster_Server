@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/test", test);
-app.use("/api/class", classAPI);
+app.use("/api/classes", classAPI);
 app.use("/api/user", userAPI);
 
 
