@@ -9,6 +9,10 @@ router.get("/", (req, res) => {
   controller.getAllClasses(req, res);
 });
 
+router.get("/id", (req, res) => {
+  controller.getClassById(req, res);
+});
+
 router.post("/create", (req, res) => {
   controller.createClass(req, res);
 });
