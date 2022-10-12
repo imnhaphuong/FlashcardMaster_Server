@@ -6,7 +6,10 @@ const Class = require("../models/Class");
 const controller = require("../controllers/classController");
 
 router.get("/", (req, res) => {
-  controller.get(req, res);
+  controller.getAllClasses(req, res);
+});
+router.get("/", (req, res) => {
+  controller.getClassById(req, res);
 });
 
 router.post("/create", (req, res) => {

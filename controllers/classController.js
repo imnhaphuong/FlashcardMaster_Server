@@ -1,29 +1,32 @@
 const Class = require("../models/Class");
 
 module.exports = {
-  get(req, res) {
-    if (typeof req.body.id === "undefined" || req.body.id === null) {
+  getAllClasses(req, res) {
+    if (req.body.id == null) {
       Class.find({})
-        .then((data) => {
-          console.log("got all classes");
-          res.send(data);
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-    } else {
-      Class.findById(req.body.id)
-        .then((data) => {
-          console.log("got the class has id " + req.body.id);
-          res.send(data);
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-    }
+      .then((data) => {
+
+        console.log("got all classes");
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+    } else{
+      }
+
   },
 
-  getClassById(req, res) {},
+  getClassById(req, res) {
+    Class.findById(req.body.id)
+      .then((data) => {
+        console.log("got the class has id " + req.body.id);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
 
   createClass(req, res) {
     const my_class = new Class({
