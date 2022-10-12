@@ -17,6 +17,7 @@ const ClassSchema = new mongoose.Schema({
     ],
   },
   members: [String],
+  units: [String],
   jcode: {
     type: String,
     trim: true,
