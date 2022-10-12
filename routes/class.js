@@ -8,7 +8,7 @@ const controller = require("../controllers/classController");
 router.get("/", (req, res) => {
   controller.getAllClasses(req, res);
 });
-router.get("/", (req, res) => {
+router.post("/", (req, res) => {
   controller.getClassById(req, res);
 });
 
