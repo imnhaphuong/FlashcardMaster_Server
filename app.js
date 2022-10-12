@@ -12,7 +12,7 @@ const classAPI = require("./routes/class");
 const userAPI = require("./routes/user");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+//ROUTES
 app.use("/test", test);
 app.use("/api/class", classAPI);
 app.use("/api/user", userAPI);
