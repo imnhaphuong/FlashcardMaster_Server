@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 },
 router.post("/create", (req, res) => {
   controller.createTopic(req, res);
-}),
+})
 )
 
 module.exports = router;

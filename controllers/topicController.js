@@ -17,6 +17,7 @@ module.exports = {
       console.log("create topics");
       const new_topic = new Topic({
         name: req.body.name,
+        units: req.body.units
       });
       new_topic
         .save()
@@ -27,5 +28,5 @@ module.exports = {
         .catch((err) => {
           console.log("err", err);
         });
-    },
+    }
 }

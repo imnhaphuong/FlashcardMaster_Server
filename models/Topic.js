@@ -7,10 +7,10 @@ const TopicSchema = new mongoose.Schema({
       trim: true,
       required: [
         true,
-        "topic name not provided. Cannot create topic without name",
+        "Topic name not provided. Cannot create topic without name",
       ],
     },
-    units: []
+    units: [String]
   });
   
   module.exports = mongoose.model("topic", TopicSchema);
