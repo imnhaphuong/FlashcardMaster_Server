@@ -10,12 +10,14 @@ const port = process.env.PORT || 3000;
 const test = require("./routes/test");
 const classAPI = require("./routes/class");
 const userAPI = require("./routes/user");
+const topicAPI = require("./routes/topic")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //ROUTES
 app.use("/test", test);
-app.use("/api/class", classAPI);
+app.use("/api/classes", classAPI);
 app.use("/api/users", userAPI);
+app.use("/api/topics",topicAPI);
 
 
 //Kết nối mongodb

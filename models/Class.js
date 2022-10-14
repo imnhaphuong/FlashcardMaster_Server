@@ -17,6 +17,7 @@ const ClassSchema = new mongoose.Schema({
     ],
   },
   members: [String],
+  units: [String],
   jcode: {
     type: String,
     trim: true,
@@ -26,6 +27,9 @@ const ClassSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  mode: {
+    type: Number
+  }
 });
 
 module.exports = mongoose.model("class", ClassSchema);
