@@ -13,10 +13,10 @@ const userAPI = require("./routes/user");
 const topicAPI = require("./routes/topic")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+//ROUTES
 app.use("/test", test);
 app.use("/api/classes", classAPI);
-app.use("/api/user", userAPI);
+app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
 
 
