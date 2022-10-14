@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //ROUTES
 app.use("/test", test);
 app.use("/api/class", classAPI);
-app.use("/api/user", userAPI);
+app.use("/api/users", userAPI);
 
 
 //Kết nối mongodb

@@ -4,18 +4,22 @@ const userController = require("../controllers/userController");
 const router = express.Router();
 const User = require("../models/User");
 
-router.get("/", (req, res) => {
-  console.log("got all Useres");
-  User.find({})
-    .then((data) => {
-      console.log("got all");
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log("err", err);
-    });
-});
+// router.get("/", (req, res) => {
+//   console.log("got all Useres");
+//   User.find({})
+//     .then((data) => {
+//       console.log("got all");
+//       res.send(data);
+//     })
+//     .catch((err) => {
+//       console.log("err", err);
+//     });
+// });
+router.get("/", userController.getAllUser);
+router.post("/id", userController.getUserByID);
 router.post("/create", userController.createUser);
+router.post("/signin", userController.signIn);
+
 // router.post("/create", (req, res) => {
 //   const my_user = new User({
 //     email: req.body.email,

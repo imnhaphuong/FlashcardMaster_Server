@@ -3,6 +3,8 @@ const Userschema = new mongoose.Schema({
     email: {
         type: String,
         require: true,
+        primaryKey: true, 
+        allowNull: false
     },
     fullName: {
         type: String,
@@ -44,4 +46,4 @@ const Userschema = new mongoose.Schema({
 })
 let User = mongoose.model("user", Userschema);
 
-module.exports = {User};
+module.exports = { User };
