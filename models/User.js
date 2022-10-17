@@ -14,6 +14,10 @@ const Userschema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    isVerified:{
+        type: Boolean,
+        default: false,
+    },
     avatar: {
         type: String,
         default: '',
@@ -38,9 +42,10 @@ const Userschema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    created: {
+    createdAt: {
         type: Date,
-        default: Date.now,
+        expires:3600,
+        default: Date.now(),
     },
 
 }, { collection: 'users' })
