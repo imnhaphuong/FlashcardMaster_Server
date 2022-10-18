@@ -42,8 +42,8 @@ module.exports = {
   deleteClass(req, res) {
     Class.findByIdAndRemove(req.body.id)
       .then((data) => {
-        res.send("deleted");
-        console.log(data);
+        console.log('deleted');
+        res.send([]);
       })
       .catch((err) => {
         console.log("err", err);

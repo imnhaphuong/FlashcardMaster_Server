@@ -21,7 +21,7 @@ const ClassSchema = new mongoose.Schema({
   jcode: {
     type: String,
     trim: true,
-    // unique: [true, "code already exists in database!"],
+    unique: [true, "code already exists in database!"],
   },
   created: {
     type: Date,
@@ -31,5 +31,6 @@ const ClassSchema = new mongoose.Schema({
     type: Number
   }
 });
+
 
 module.exports = mongoose.model("class", ClassSchema);
