@@ -2,7 +2,7 @@ const { User } = require("../models/User");
 const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const { generateOTP, mailTransport } = require("../utils/mail");
+const { generateOTP, mailTransport, mailTransportRespone } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
 //mail sender details
@@ -46,39 +46,29 @@ const userController = {
         await verificationToken.save();
         await newUser.save();
         //send verification mail to user
-        mailTransport().sendMail({
-            from: 'fmaster@gmail.com',
-            to: newUser.email,
-            subject: "Xác nhận tài khoản email đăng ký",
-            html: `<h1>${OTP}</h1>`
-        })
+        await mailTransport(newUser.email,OTP)
         res.status(200);// HTTP REQUEST CODE
 
-        res.json({ status: 'ok' })
+        res.json({ status: 'ok',userId:newUser._id })
     },
     //verify
     verifyEmail: async (req, res) => {
         const { userId, otp } = req.body
         console.log(userId);
-        if (!userId || !otp.trim()) return res.json( 'Invalid request')
-        if (!isValidObjectId(userId)) return res.json( 'id tài khoản không đúng')
+        if (!userId || !otp.trim()) return res.json({status:'error', message: 'Invalid request'})
+        if (!isValidObjectId(userId)) return res.json({status:'error', message: 'id tài khoản không đúng'})
         const user = await User.findById(userId)
-        if (!user) return (res, 'Tài khoản không tồn tại')
-        if (user.isVerified) return res.json( 'Tài khoản đã được xác nhận');
+        if (!user) return ({status:'error', message: 'Tài khoản không tồn tại'})
+        if (user.isVerified) return res.json({status:'error', message: 'Tài khoản đã được xác nhận'});
         const token = await VerificationToken.findOne({ owner: user._id })
-        if (!token) return res.json( 'Tài khoản không tồn tại');
+        if (!token) return res.json({status:'error', message: 'Tài khoản không tồn tại'});
         const isMatched = await token.compareToken(otp)
-        if (!isMatched)return res.json( 'Mã OTP không đúng');
+        if (!isMatched)return res.json({status:'error', message: 'Mã OTP không đúng'});
         user.isVerified = true;
         await VerificationToken.findByIdAndDelete(token._id)
         await user.save();
-        mailTransport().sendMail({
-            from: 'fmaster@gmail.com',
-            to: user.email,
-            subject: "Xác nhận tài khoản email đăng ký",
-            html: `<h1>Xác nhận thành công</h1>`
-        }) 
-        res.json({success: true, message:"Xác nhận thành công"})
+        await mailTransportRespone(user.email)
+        res.json({status: 'success', message:"Xác nhận thành công"})
     },
     //sign in
     signIn: async (req, res) => {
@@ -86,6 +76,9 @@ const userController = {
             const user = await User.findOne({ email: req.body.email });
             if (!user) {
                 return res.status(400).send({ status: 'error', message: "Email này chưa được đăng ký " });
+            }
+            if(user.isVerified === false){
+                return res.status(400).send({ status: 'errorVerified', message: "Vui lòng xác nhận email " });
             }
             if (!Bcrypt.compareSync(req.body.password, user.password)) {
                 return res.status(400).send({ status: 'error', message: "Mật khẩu chưa đúng" });
