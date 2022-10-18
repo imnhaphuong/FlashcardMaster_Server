@@ -19,6 +19,12 @@ app.use("/api/classes", classAPI);
 app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
 
+const CLIENT_ID='197240706382-ii21t3f4q95o24snpnrah23f509il3rf.apps.googleusercontent.com'
+const CLIENT_SECRET='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'
+const REDIRECT_URI='https://developers.google.com/oauthplayground'
+const REFRESH_TOKEN='1//040e6R5jfldceCgYIARAAGAQSNwF-L9IrMveRUp8vr_xFoabCDJXLFMuWXVPmkmToYAgyRVHo-VhdVvMahRrTs3Zfp7ZpqqhNAy8'
+
+
 
 //Kết nối mongodb
 const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.i3iqx2l.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
