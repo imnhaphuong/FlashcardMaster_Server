@@ -10,23 +10,11 @@ exports.generateOTP = () => {
     }
     return otp;
 }
-// exports.mailTransport = () => {
-//     var transport = nodemailer.createTransport({
-//         host: "smtp.mailtrap.io",
-//         port: 2525,
-//         auth: {
-//             user: process.env.MAILTRAP_USERNAME,
-//             pass: process.env.MAILTRAP_PASSWORD
-//         }
-//     });
-//     return transport
-// }
+
 
 exports.mailTransport = async (email, otp) => {
-    const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
-    oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN })
+
     try {
-        const accessToken = await oAuth2Client.getAccessToken()
 
         var transport = nodemailer.createTransport({
             host: "smtp.office365.com",
@@ -62,10 +50,8 @@ exports.mailTransport = async (email, otp) => {
     return transport
 }
 exports.mailTransportRespone = async (email) => {
-    const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
-    oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN })
+
     try {
-        const accessToken = await oAuth2Client.getAccessToken()
 
         var transport = nodemailer.createTransport({
             host: "smtp.office365.com",
