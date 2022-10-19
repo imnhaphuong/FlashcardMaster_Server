@@ -1,5 +1,6 @@
 const Topic = require("../models/Topic");
-
+const { findById } = require("../models/Unit");
+const Unit = require("../models/Unit")
 
 module.exports = {
     getAllTopics(req, res) {
@@ -28,5 +29,18 @@ module.exports = {
         .catch((err) => {
           console.log("err", err);
         });
+    },
+    gettAllUnitsByTopicID(req, res) {
+      var topic_id = "";
+      Unit.findById(topic_id, function(err, docs){
+        if(err){
+          console.log("err");
+          res.send([]);
+        }
+      })
+      .then((data) => {
+        console.log("get units by topic_id");
+        res.send(data);
+      })
     }
 }

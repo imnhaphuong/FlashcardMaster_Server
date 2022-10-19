@@ -49,4 +49,7 @@ module.exports = {
         console.log("err", err);
       });
   },
+  getClassBySearch (req, res){
+    
+  }
 };
