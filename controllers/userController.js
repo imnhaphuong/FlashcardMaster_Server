@@ -46,29 +46,29 @@ const userController = {
         await verificationToken.save();
         await newUser.save();
         //send verification mail to user
-        await mailTransport(newUser.email,OTP)
+        await mailTransport(newUser.email, OTP)
         res.status(200);// HTTP REQUEST CODE
 
-        res.json({ status: 'ok',userId:newUser._id })
+        res.json({ status: 'ok', userId: newUser._id })
     },
     //verify
     verifyEmail: async (req, res) => {
         const { userId, otp } = req.body
         console.log(userId);
-        if (!userId || !otp.trim()) return res.json({status:'error', message: 'Invalid request'})
-        if (!isValidObjectId(userId)) return res.json({status:'error', message: 'id tài khoản không đúng'})
+        if (!userId || !otp.trim()) return res.json({ status: 'error', message: 'Invalid request' })
+        if (!isValidObjectId(userId)) return res.json({ status: 'error', message: 'id tài khoản không đúng' })
         const user = await User.findById(userId)
-        if (!user) return ({status:'error', message: 'Tài khoản không tồn tại'})
-        if (user.isVerified) return res.json({status:'error', message: 'Tài khoản đã được xác nhận'});
+        if (!user) return ({ status: 'error', message: 'Tài khoản không tồn tại' })
+        if (user.isVerified) return res.json({ status: 'error', message: 'Tài khoản đã được xác nhận' });
         const token = await VerificationToken.findOne({ owner: user._id })
-        if (!token) return res.json({status:'error', message: 'Tài khoản không tồn tại'});
+        if (!token) return res.json({ status: 'error', message: 'Tài khoản không tồn tại' });
         const isMatched = await token.compareToken(otp)
-        if (!isMatched)return res.json({status:'error', message: 'Mã OTP không đúng'});
+        if (!isMatched) return res.json({ status: 'error', message: 'Mã OTP không đúng' });
         user.isVerified = true;
         await VerificationToken.findByIdAndDelete(token._id)
         await user.save();
         await mailTransportRespone(user.email)
-        res.json({status: 'success', message:"Xác nhận thành công"})
+        res.json({ status: 'success', message: "Xác nhận thành công" })
     },
     //sign in
     signIn: async (req, res) => {
@@ -77,7 +77,7 @@ const userController = {
             if (!user) {
                 return res.status(400).send({ status: 'error', message: "Email này chưa được đăng ký " });
             }
-            if(user.isVerified === false){
+            if (user.isVerified === false) {
                 return res.status(400).send({ status: 'errorVerified', message: "Vui lòng xác nhận email " });
             }
             if (!Bcrypt.compareSync(req.body.password, user.password)) {
@@ -111,6 +111,17 @@ const userController = {
 
         }
     },
+    signInGG: async () => {
+        // Create an anonymous credential
+        const credentials = Real.Credentials.anonymous();
+        try {
+            const user = await app.logIn(credentials);
+            console.log("Successfully logged in!", user.id);
+            return user;
+        } catch (err) {
+            console.error("Failed to log in", err.message);
+        }
+    }
 };
 
 module.exports = userController;
