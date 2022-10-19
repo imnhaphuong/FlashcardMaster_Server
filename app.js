@@ -7,14 +7,14 @@ const mongoose = require("mongoose");
 const port = process.env.PORT || 3000;
 
 //Require routes
-const test = require("./routes/test");
+const unitAPI = require("./routes/unit");
 const classAPI = require("./routes/class");
 const userAPI = require("./routes/user");
 const topicAPI = require("./routes/topic")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//ROUTES
-app.use("/test", test);
+
+app.use("/api/units", unitAPI);
 app.use("/api/classes", classAPI);
 app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
