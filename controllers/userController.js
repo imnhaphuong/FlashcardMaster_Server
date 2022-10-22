@@ -5,17 +5,7 @@ const nodemailer = require("nodemailer");
 const { generateOTP, mailTransport, mailTransportRespone } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
-//mail sender details
-// const transporter = nodemailer.creatTransporter({
-//     service: 'gmail',
-//     auth: {
-//         user: 'trangnguyen24201@gmail.com',
-//         pass: password
-//     },
-//     tls: {
-//         rejectUnauthorized: false,
-//     }
-// })
+
 const userController = {
     //Create
     createUser: async (req, res) => {
