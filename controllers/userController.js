@@ -97,8 +97,8 @@ const userController = {
             console.log(req.body);
             User.findById(req.body.id).then(data => res.send(data));
         } catch (err) {
-            res.status(500).json(err);// HTTP REQUEST CODE
-
+            console.log(err);
+            res.send([])
         }
     },
     //getAllUser
