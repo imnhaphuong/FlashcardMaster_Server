@@ -22,7 +22,7 @@ exports.mailTransport = async (email, otp) => {
             auth: {
                 user: process.env.GMAIL_USER,
                 pass: process.env.GMAIL_PASSWORD,
-
+ 
             }
         });
         var mailOptions = {

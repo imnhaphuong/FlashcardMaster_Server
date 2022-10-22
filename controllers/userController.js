@@ -121,7 +121,31 @@ const userController = {
         } catch (err) {
             console.error("Failed to log in", err.message);
         }
-    }
+    },
+    chooseClass: async (req, res) => {
+        const { email} = req.body
+        try {
+            const user = await User.findOne({ email: email });
+            user.type = 1;
+            await user.save();
+            res.status(200)
+            res.json({ status: 'ok', user: user })
+        } catch (err) {
+            res.status(500).json(err);// HTTP REQUEST CODE
+        }
+    },
+    choosePersonal: async (req, res) => {
+        const { email} = req.body
+        try {
+            const user = await User.findOne({ email: email });
+            user.type = 2;
+            await user.save();
+            res.status(200)
+            res.json({ status: 'ok', user: user })
+        } catch (err) {
+            res.status(500).json(err);// HTTP REQUEST CODE
+        }
+    },
 };
 
 module.exports = userController;
