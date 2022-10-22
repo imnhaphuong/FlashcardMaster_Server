@@ -5,17 +5,7 @@ const nodemailer = require("nodemailer");
 const { generateOTP, mailTransport, mailTransportRespone } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
-//mail sender details
-// const transporter = nodemailer.creatTransporter({
-//     service: 'gmail',
-//     auth: {
-//         user: 'trangnguyen24201@gmail.com',
-//         pass: password
-//     },
-//     tls: {
-//         rejectUnauthorized: false,
-//     }
-// })
+
 const userController = {
     //Create
     createUser: async (req, res) => {
@@ -121,7 +111,31 @@ const userController = {
         } catch (err) {
             console.error("Failed to log in", err.message);
         }
-    }
+    },
+    chooseClass: async (req, res) => {
+        const { email} = req.body
+        try {
+            const user = await User.findOne({ email: email });
+            user.type = 1;
+            await user.save();
+            res.status(200)
+            res.json({ status: 'ok', user: user })
+        } catch (err) {
+            res.status(500).json(err);// HTTP REQUEST CODE
+        }
+    },
+    choosePersonal: async (req, res) => {
+        const { email} = req.body
+        try {
+            const user = await User.findOne({ email: email });
+            user.type = 2;
+            await user.save();
+            res.status(200)
+            res.json({ status: 'ok', user: user })
+        } catch (err) {
+            res.status(500).json(err);// HTTP REQUEST CODE
+        }
+    },
 };
 
 module.exports = userController;

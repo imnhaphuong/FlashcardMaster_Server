@@ -9,6 +9,9 @@ router.post("/id", userController.getUserByID);
 router.post("/create", userController.createUser);
 router.post("/signin", userController.signIn);
 router.post("/verify-email",userController.verifyEmail);
+router.post("/type-class",userController.chooseClass);
+router.post("/type-personal",userController.choosePersonal);
+
 router.post("/signinGG", userController.signIn);
 
 
