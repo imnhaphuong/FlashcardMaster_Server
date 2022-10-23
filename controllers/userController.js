@@ -20,14 +20,6 @@ const userController = {
         });
         console.log('User created successfully: ', newUser)
 
-        // res.send(newUser);
-        //send verification mail to user
-        // const mailOptions ={
-        //     from:'"Verify your email" <trangnguyen24201@gmail.com>',
-        //     to: newUser.email,
-        //     subject:'trangnguyen - verify your email',
-        //     mess: `${newUser.name}! Cảm ơn đã đăng ký`
-        // }  
         const OTP = generateOTP()
         const verificationToken = new VerificationToken({
             owner: newUser._id,
@@ -39,7 +31,23 @@ const userController = {
         await mailTransport(newUser.email, OTP)
         res.status(200);// HTTP REQUEST CODE
 
-        res.json({ status: 'ok', userId: newUser._id })
+        res.json({ status: 'ok', user: newUser })
+    },
+    sendVerificationEmaail: async (req, res) => {
+        const {userId,email} = req.body
+        const OTP = generateOTP()
+        const token = await VerificationToken.findOne({ owner: userId })
+        await VerificationToken.findByIdAndDelete(token._id)
+        const verificationToken = new VerificationToken({
+            owner: userId,
+            token: OTP
+        })     
+        await verificationToken.save();
+        //send verification mail to user
+        await mailTransport(email, OTP)
+        res.status(200);// HTTP REQUEST CODE
+
+        res.json({ status: 'ok' })
     },
     //verify
     verifyEmail: async (req, res) => {
