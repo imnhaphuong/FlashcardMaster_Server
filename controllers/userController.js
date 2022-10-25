@@ -5,17 +5,7 @@ const nodemailer = require("nodemailer");
 const { generateOTP, mailTransport, mailTransportRespone } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
-//mail sender details
-// const transporter = nodemailer.creatTransporter({
-//     service: 'gmail',
-//     auth: {
-//         user: 'trangnguyen24201@gmail.com',
-//         pass: password
-//     },
-//     tls: {
-//         rejectUnauthorized: false,
-//     }
-// })
+
 const userController = {
     //Create
     createUser: async (req, res) => {
@@ -30,14 +20,6 @@ const userController = {
         });
         console.log('User created successfully: ', newUser)
 
-        // res.send(newUser);
-        //send verification mail to user
-        // const mailOptions ={
-        //     from:'"Verify your email" <trangnguyen24201@gmail.com>',
-        //     to: newUser.email,
-        //     subject:'trangnguyen - verify your email',
-        //     mess: `${newUser.name}! Cảm ơn đã đăng ký`
-        // }  
         const OTP = generateOTP()
         const verificationToken = new VerificationToken({
             owner: newUser._id,
@@ -49,7 +31,23 @@ const userController = {
         await mailTransport(newUser.email, OTP)
         res.status(200);// HTTP REQUEST CODE
 
-        res.json({ status: 'ok', userId: newUser._id })
+        res.json({ status: 'ok', user: newUser })
+    },
+    sendVerificationEmaail: async (req, res) => {
+        const {userId,email} = req.body
+        const OTP = generateOTP()
+        const token = await VerificationToken.findOne({ owner: userId })
+        await VerificationToken.findByIdAndDelete(token._id)
+        const verificationToken = new VerificationToken({
+            owner: userId,
+            token: OTP
+        })     
+        await verificationToken.save();
+        //send verification mail to user
+        await mailTransport(email, OTP)
+        res.status(200);// HTTP REQUEST CODE
+
+        res.json({ status: 'ok' })
     },
     //verify
     verifyEmail: async (req, res) => {
@@ -95,7 +93,7 @@ const userController = {
     getUserByID: async (req, res) => {
         try {
             console.log(req.body);
-            User.findById(req.body.id).then(data => res.send(data));
+            User.findById(req.body).then(data => res.send(data));
         } catch (err) {
             console.log(err);
             res.send([])
@@ -121,7 +119,31 @@ const userController = {
         } catch (err) {
             console.error("Failed to log in", err.message);
         }
-    }
+    },
+    chooseClass: async (req, res) => {
+        const { email} = req.body
+        try {
+            const user = await User.findOne({ email: email });
+            user.type = 1;
+            await user.save();
+            res.status(200)
+            res.json({ status: 'ok', user: user })
+        } catch (err) {
+            res.status(500).json(err);// HTTP REQUEST CODE
+        }
+    },
+    choosePersonal: async (req, res) => {
+        const { email} = req.body
+        try {
+            const user = await User.findOne({ email: email });
+            user.type = 2;
+            await user.save();
+            res.status(200)
+            res.json({ status: 'ok', user: user })
+        } catch (err) {
+            res.status(500).json(err);// HTTP REQUEST CODE
+        }
+    },
 };
 
 module.exports = userController;
