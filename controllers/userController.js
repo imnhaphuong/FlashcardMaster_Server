@@ -2,7 +2,11 @@ const { User } = require("../models/User");
 const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const { generateOTP, mailTransport, mailTransportRespone } = require("../utils/mail");
+const {
+  generateOTP,
+  mailTransport,
+  mailTransportRespone,
+} = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
 const { default: ShortUniqueId } = require('short-unique-id');
