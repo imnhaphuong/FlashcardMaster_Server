@@ -5,11 +5,21 @@ const nodemailer = require("nodemailer");
 const { generateOTP, mailTransport, mailTransportRespone } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
+const { default: ShortUniqueId } = require('short-unique-id');
+const uid = new ShortUniqueId({
+    dictionary: [
+        '0', '1', '2', '3',
+        '4', '5', '6', '7',
+        '8', '9'
+    ],
+});
+
+
 
 const userController = {
     //Create
     createUser: async (req, res) => {
-
+        const deFullName ='user' + uid.randomUUID(4);
         const { email } = req.body
         const user = await User.findOne({ email });
         if (user) return res.json({ status: 'error', error: 'Tài khoản email đã được đăng ký' })
@@ -17,6 +27,7 @@ const userController = {
         const newUser = new User({
             email: req.body.email,
             password: req.body.password,
+            fullname:deFullName
         });
         console.log('User created successfully: ', newUser)
 
@@ -25,6 +36,7 @@ const userController = {
             owner: newUser._id,
             token: OTP
         })
+        console.log("verification", verificationToken);
         await verificationToken.save();
         await newUser.save();
         //send verification mail to user
@@ -37,7 +49,9 @@ const userController = {
         const {userId,email} = req.body
         const OTP = generateOTP()
         const token = await VerificationToken.findOne({ owner: userId })
-        await VerificationToken.findByIdAndDelete(token._id)
+        if(token._id){
+            await VerificationToken.findByIdAndDelete(token._id)
+        }
         const verificationToken = new VerificationToken({
             owner: userId,
             token: OTP
@@ -52,7 +66,6 @@ const userController = {
     //verify
     verifyEmail: async (req, res) => {
         const { userId, otp } = req.body
-        console.log(userId);
         if (!userId || !otp.trim()) return res.json({ status: 'error', message: 'Invalid request' })
         if (!isValidObjectId(userId)) return res.json({ status: 'error', message: 'id tài khoản không đúng' })
         const user = await User.findById(userId)
@@ -63,7 +76,9 @@ const userController = {
         const isMatched = await token.compareToken(otp)
         if (!isMatched) return res.json({ status: 'error', message: 'Mã OTP không đúng' });
         user.isVerified = true;
-        await VerificationToken.findByIdAndDelete(token._id)
+        if(token._id){
+            await VerificationToken.findByIdAndDelete(token._id)
+        }
         await user.save();
         await mailTransportRespone(user.email)
         res.json({ status: 'success', message: "Xác nhận thành công" })
@@ -92,7 +107,6 @@ const userController = {
     //Get by id
     getUserByID: async (req, res) => {
         try {
-            console.log(req.body);
             User.findById(req.body).then(data => res.send(data));
         } catch (err) {
             console.log(err);

@@ -1,4 +1,6 @@
-const mongoose = require('mongoose')
+
+const mongoose = require('mongoose');
+
 const Userschema = new mongoose.Schema({
     email: {
         type: String,
@@ -6,15 +8,15 @@ const Userschema = new mongoose.Schema({
         unique: true,
 
     },
-    fullName: {
+    fullname: {
         type: String,
-        default: '',
+        default: "",
     },
     password: {
         type: String,
         required: true,
     },
-    isVerified:{
+    isVerified: {
         type: Boolean,
         default: false,
     },
@@ -42,7 +44,7 @@ const Userschema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    role:{
+    role: {
         type: Number,
         default: 0,
     },
@@ -54,4 +56,4 @@ const Userschema = new mongoose.Schema({
 }, { collection: 'users' })
 let User = mongoose.model("users", Userschema);
 User.createIndexes();
-module.exports = {User} ;
+module.exports = { User };
