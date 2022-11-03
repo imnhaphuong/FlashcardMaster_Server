@@ -76,7 +76,7 @@ const userController = {
         if (!user) return ({ status: 'error', message: 'Tài khoản không tồn tại' })
         if (user.isVerified) return res.json({ status: 'error', message: 'Tài khoản đã được xác nhận' });
         const token = await VerificationToken.findOne({ owner: user._id })
-        if (!token) return res.json({ status: 'error', message: 'Tài khoản không tồn tại' });
+        if (!token) return res.json({ status: 'error', message: 'Lỗi: Tài khoản không tồn tại' });
         const isMatched = await token.compareToken(otp)
         if (!isMatched) return res.json({ status: 'error', message: 'Mã OTP không đúng' });
         user.isVerified = true;
