@@ -1,4 +1,6 @@
-const mongoose = require('mongoose')
+
+const mongoose = require('mongoose');
+
 const Userschema = new mongoose.Schema({
     email: {
         type: String,
@@ -6,15 +8,15 @@ const Userschema = new mongoose.Schema({
         unique: true,
 
     },
-    fullName: {
+    fullname: {
         type: String,
-        default: '',
+        default: "",
     },
     password: {
         type: String,
         required: true,
     },
-    isVerified:{
+    isVerified: {
         type: Boolean,
         default: false,
     },
@@ -42,13 +44,12 @@ const Userschema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    role:{
+    role: {
         type: Number,
         default: 0,
     },
     createdAt: {
         type: Date,
-        expires:3600,
         default: Date.now(),
     },
 
