@@ -30,5 +30,9 @@ router.post("/update", (req, res) => {
   controller.updateClass(req, res);
 });
 
+router.get("/search", (req, res) => {
+  controller.searchClass(req, res);
+});
+
 module.exports = router;
 

@@ -31,6 +31,19 @@ const unitController = {
       .catch((err) => {
         console.log("err", err);
       });
+  },
+  searchUnit(req, res) {
+    Unit.find({
+      mode: true,
+      unitName: /req.body.key/
+    })
+    .then((data) =>{
+      res.send(data);
+      console.log("get unit by unit_name");
+    })
+    .catch((err) => {
+      console.log("err",err);
+    })
   }
 }
 module.exports = unitController;
