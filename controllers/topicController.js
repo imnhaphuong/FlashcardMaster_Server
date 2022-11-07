@@ -30,17 +30,24 @@ module.exports = {
           console.log("err", err);
         });
     },
-    gettAllUnitsByTopicID(req, res) {
-      var topic_id = "";
-      Unit.findById(topic_id, function(err, docs){
-        if(err){
-          console.log("err");
+    gettAllUnitsByTopic(req, res) {
+      Topic.find({})
+        .then((data) => {
+          var newdata = data;
+          newdata.map(element => (
+            //console.log(element.units);
+            Topic.findOne({units: element.units}).
+            populate('units').
+            exec(function(err, topicc){
+              if(err) return handleError(err);
+              console.log(topicc + "helooooo");
+            })
+          ))
+          res.send(data);
+        })
+        .catch((err) => {
+          console.log("err", err);
           res.send([]);
-        }
-      })
-      .then((data) => {
-        console.log("get units by topic_id");
-        res.send(data);
-      })
+        });
     }
 }
