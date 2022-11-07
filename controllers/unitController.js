@@ -1,5 +1,5 @@
 const Unit = require("../models/Unit");
-const Flashcard = require("../models/Unit");
+const uploadCloud = require("../utils/cloudinary.config")
 const unitController = {
   getAllUnits(req, res) {
     Unit.find({})
@@ -12,38 +12,44 @@ const unitController = {
         res.send([]);
       });
   },
+
   createUnit(req, res) {
     console.log("create unit");
-    const fcard = req.body.fcards;
-    
-    const new_unit = new Unit({
-      unit_name: req.body.unit_name,
-      username: req.body.username,
-      mode: req.body.mode,
-      flashcards: fcard
-    });
-    new_unit
-      .save()
-      .then((data) => {
-        res.send(data);
-        console.log("create new unit success");
-      })
-      .catch((err) => {
-        console.log("err", err);
+
+    try {
+      const new_unit = new Unit({
+        unitName: req.body.unitName,
+        creator: req.body.userId,
+        fullname: req.body.fullname,
+        mode: req.body.mode,
+        flashcards: req.body.flashcards
+
       });
+      new_unit
+        .save()
+        .then((data) => {
+          res.send(data);
+          console.log("create new unit success");
+        })
+    } catch (err) {
+      console.log("err", err);
+      res.status(500).send(err)
+    }
   },
+
   searchUnit(req, res) {
     Unit.find({
       mode: true,
       unitName: /req.body.key/
     })
-    .then((data) =>{
-      res.send(data);
-      console.log("get unit by unit_name");
-    })
-    .catch((err) => {
-      console.log("err",err);
-    })
+      .then((data) => {
+        res.send(data);
+        console.log("get unit by unit_name");
+      })
+      .catch((err) => {
+        console.log("err", err);
+      })
+
   }
 }
 module.exports = unitController;

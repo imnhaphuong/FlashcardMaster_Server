@@ -3,9 +3,9 @@ const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const {
-  generateOTP,
-  mailTransport,
-  mailTransportRespone,
+    generateOTP,
+    mailTransport,
+    mailTransportRespone,
 } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
@@ -23,7 +23,7 @@ const uid = new ShortUniqueId({
 const userController = {
     //Create
     createUser: async (req, res) => {
-        const deFullName ='user' + uid.randomUUID(4);
+        const deFullName = 'user' + uid.randomUUID(4);
         const { email } = req.body
         const user = await User.findOne({ email });
         if (user) return res.json({ status: 'error', error: 'Tài khoản email đã được đăng ký' })
@@ -31,7 +31,7 @@ const userController = {
         const newUser = new User({
             email: req.body.email,
             password: req.body.password,
-            fullname:deFullName
+            fullname: deFullName
         });
         console.log('User created successfully: ', newUser)
 
@@ -50,16 +50,16 @@ const userController = {
         res.json({ status: 'ok', user: newUser })
     },
     sendVerificationEmaail: async (req, res) => {
-        const {userId,email} = req.body
+        const { userId, email } = req.body
         const OTP = generateOTP()
         const token = await VerificationToken.findOne({ owner: userId })
-        if(token._id){
+        if (token._id) {
             await VerificationToken.findByIdAndDelete(token._id)
         }
         const verificationToken = new VerificationToken({
             owner: userId,
             token: OTP
-        })     
+        })
         await verificationToken.save();
         //send verification mail to user
         await mailTransport(email, OTP)
@@ -75,14 +75,14 @@ const userController = {
         const user = await User.findById(userId)
         if (!user) return ({ status: 'error', message: 'Tài khoản không tồn tại' })
         if (user.isVerified) return res.json({ status: 'error', message: 'Tài khoản đã được xác nhận' });
-        const token = await VerificationToken.findOne({ owner: user._id })
+        const token = await VerificationToken.findOne({ owner: userId })
         if (!token) return res.json({ status: 'error', message: 'Lỗi: Tài khoản không tồn tại' });
         const isMatched = await token.compareToken(otp)
         if (!isMatched) return res.json({ status: 'error', message: 'Mã OTP không đúng' });
         user.isVerified = true;
-        if(token._id){
-            await VerificationToken.findByIdAndDelete(token._id)
-        }
+
+        await VerificationToken.findByIdAndDelete(token._id)
+
         await user.save();
         await mailTransportRespone(user.email)
         res.json({ status: 'success', message: "Xác nhận thành công" })
@@ -139,7 +139,7 @@ const userController = {
         }
     },
     chooseClass: async (req, res) => {
-        const { email} = req.body
+        const { email } = req.body
         try {
             const user = await User.findOne({ email: email });
             user.type = 1;
@@ -151,7 +151,7 @@ const userController = {
         }
     },
     choosePersonal: async (req, res) => {
-        const { email} = req.body
+        const { email } = req.body
         try {
             const user = await User.findOne({ email: email });
             user.type = 2;
