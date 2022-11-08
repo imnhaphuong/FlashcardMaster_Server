@@ -162,6 +162,18 @@ const userController = {
             res.status(500).json(err);// HTTP REQUEST CODE
         }
     },
+    searchUser (req, res) {
+        User.find({
+            email: /req.body.key/
+        })
+        .then((data) =>{
+            res.send(data);
+            console.log("get User by email");
+          })
+          .catch((err) => {
+            console.log("err",err);
+          })
+    }
 };
 
 module.exports = userController;

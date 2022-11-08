@@ -14,6 +14,11 @@ router.post("/type-personal",userController.choosePersonal);
 router.post("/send-verification", userController.sendVerificationEmaail);
 
 router.post("/signinGG", userController.signIn);
+router.get("/search", (req, res) => {
+    userController.searchUser(req, res);
+  });
+  
+
 
 
 

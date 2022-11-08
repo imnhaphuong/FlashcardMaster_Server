@@ -5,6 +5,7 @@ const Unit = require("../models/Unit")
 module.exports = {
     getAllTopics(req, res) {
       Topic.find({})
+      .populate('units')
         .then((data) => {
           console.log("got all topics");
           res.send(data);
@@ -28,26 +29,6 @@ module.exports = {
         })
         .catch((err) => {
           console.log("err", err);
-        });
-    },
-    gettAllUnitsByTopic(req, res) {
-      Topic.find({})
-        .then((data) => {
-          var newdata = data;
-          newdata.map(element => (
-            //console.log(element.units);
-            Topic.findOne({units: element.units}).
-            populate('units').
-            exec(function(err, topicc){
-              if(err) return handleError(err);
-              console.log(topicc + "helooooo");
-            })
-          ))
-          res.send(data);
-        })
-        .catch((err) => {
-          console.log("err", err);
-          res.send([]);
         });
     }
 }

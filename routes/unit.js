@@ -13,4 +13,13 @@ router.post("/array", (req, res) => {
   unitController.getUnitsByArrayId(req, res);
 });
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+router.get("/search", (req, res) => {
+  unitController.searchUnit(req, res);
+});
+
+
+module.exports = router;
+>>>>>>> main

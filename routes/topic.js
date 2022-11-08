@@ -10,8 +10,5 @@ router.get("/", (req, res) => {
 router.post("/create", (req, res) => {
   controller.createTopic(req, res);
 }),
-router.get("/allunits",(req, res) =>{
-  controller.gettAllUnitsByTopic(req, res);
-}),
 
 module.exports = router;
