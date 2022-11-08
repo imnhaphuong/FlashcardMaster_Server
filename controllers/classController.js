@@ -76,17 +76,20 @@ module.exports = {
       });
   },
   searchClass(req, res) {
-    Class.find({
-      mode: 1,
-      name: /req.body.key/
-    })
-    .then((data) =>{
-      res.send(data);
-      console.log("get class by classname");
-    })
-    .catch((err) => {
-      console.log("err",err);
-    })
+    Class.aggregate([{
+      $match: {
+        $text: {
+          $search: "/" + req.params.keyword + "/"
+        },
+      }
+    }])
+      .then((data) => {
+        res.send(data);
+        console.log("get class by classname");
+      })
+      .catch((err) => {
+        console.log("err", err);
+      })
   }
 };
 

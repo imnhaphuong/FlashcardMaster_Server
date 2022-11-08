@@ -36,20 +36,21 @@ const unitController = {
       res.status(500).send(err)
     }
   },
-
   searchUnit(req, res) {
-    Unit.find({
-      mode: true,
-      unitName: /req.body.key/
-    })
+    Unit.aggregate([{
+      $match: {
+        $text: {
+          $search: "/" + req.params.keyword + "/"
+        },
+      }
+    }])
       .then((data) => {
         res.send(data);
-        console.log("get unit by unit_name");
+        console.log("get unit by classname");
       })
       .catch((err) => {
         console.log("err", err);
       })
-
   }
 }
 module.exports = unitController;
