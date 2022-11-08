@@ -2,10 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 
-const Class = require("../models/Class");
-
 const controller = require("../controllers/classController");
-
 
 router.post("/create", (req, res) => {
   controller.createClass(req, res);
@@ -35,4 +32,3 @@ router.post("/", (req, res) => {
 });
 
 module.exports = router;
-

@@ -14,12 +14,11 @@ const topicAPI = require("./routes/topic")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/api/units", unitAPI);
-app.use("/api/classes", classAPI);
+
 app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
-
-
+app.use("/api/units", unitAPI);
+app.use("/api/classes", classAPI);
 
 //Kết nối mongodb
 const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.i3iqx2l.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;

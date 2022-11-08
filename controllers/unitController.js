@@ -7,7 +7,7 @@ const unitController = {
       .populate('flashcards')
       .then((data) => {
         console.log("got all units");
-        res.send(data);W
+        res.send(data);
       })
       .catch((err) => {
         console.log("err", err);
