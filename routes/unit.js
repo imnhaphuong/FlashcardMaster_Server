@@ -4,7 +4,7 @@ const router = express.Router();
 
 const unitController = require("../controllers/unitController");
 
-// router.get("/", unitController.getAllUnits);
+router.get("/", unitController.getAllUnits);
 router.post("/create", unitController.createUnit);
 router.post("/getAll", (req, res) => {
   unitController.getAllUnitsCreatedByCreator(req, res);
