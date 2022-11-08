@@ -54,4 +54,8 @@ const Userschema = new mongoose.Schema(
   },
   { collection: "users" }
 );
-module.exports = mongoose.model("users", Userschema);
+let User = mongoose.model("users", Userschema);
+Userschema.index({
+  email: "text",
+});
+module.exports = { User };

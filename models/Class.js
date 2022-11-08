@@ -60,4 +60,8 @@ const ClassSchema = new mongoose.Schema({
   },
 });
 
+ClassSchema.index({
+  name: "text",
+})
+
 module.exports = mongoose.model("class", ClassSchema);
