@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const User = require("../models/User");
+const Unit = require("../models/Unit");
 
 function makeJCode(length) {
   var result = "";
@@ -21,11 +23,25 @@ const ClassSchema = new mongoose.Schema({
     ],
   },
   creator: {
-    type: String,
-    required: [true, "Cannot create class without creator"],
+    type: mongoose.Types.ObjectId,
+    required: [
+      true,
+      "creator not provided. Cannot create class without creator",
+    ],
+    ref: User,
   },
-  members: [String],
-  units: [String],
+  members: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: User,
+    },
+  ],
+  units: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: Unit,
+    },
+  ],
   jcode: {
     type: String,
     trim: true,
@@ -36,6 +52,9 @@ const ClassSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  //mode = 0 private
+  //mode = 1 public
   mode: {
     type: Number,
   },
