@@ -4,7 +4,7 @@ const uploadCloud = require("../utils/cloudinary.config");
 const unitController = {
   getAllUnits(req, res) {
     Unit.find({})
-    .populate('flashcards')
+      .populate('flashcards')
       .then((data) => {
         console.log("got all units");
         res.send(data);
@@ -16,7 +16,7 @@ const unitController = {
   },
   createUnit(req, res) {
     console.log("create unit");
-    const arrFcard =[];
+    const arrFcard = [];
     try {
       const { flashcards } = req.body
       flashcards.map((item, index) => {
@@ -25,7 +25,7 @@ const unitController = {
           define: item.define,
           example: item.example,
           image: item.image,
-        });       
+        });
         arrFcard.push(new_fcard._id);
         new_fcard.save();
       })
@@ -34,7 +34,7 @@ const unitController = {
         creator: req.body.userId,
         fullname: req.body.fullname,
         mode: req.body.mode,
-        flashcards:arrFcard,
+        flashcards: arrFcard,
       });
       new_unit.save().then((data) => {
         res.send(data);
@@ -73,5 +73,23 @@ const unitController = {
         res.send([]);
       });
   },
-};
+
+
+  searchUnit(req, res) {
+    Unit.aggregate([{
+      $match: {
+        $text: {
+          $search: "/" + req.params.keyword + "/"
+        },
+      }
+    }])
+      .then((data) => {
+        res.send(data);
+        console.log("get unit by classname");
+      })
+      .catch((err) => {
+        console.log("err", err);
+      })
+  }
+}
 module.exports = unitController;

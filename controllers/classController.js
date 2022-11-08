@@ -75,4 +75,20 @@ module.exports = {
         console.log("err", err);
       });
   },
+  searchClass(req, res) {
+    Class.aggregate([{
+      $match: {
+        $text: {
+          $search: "/" + req.params.keyword + "/"
+        },
+      }
+    }])
+      .then((data) => {
+        res.send(data);
+        console.log("get class by classname");
+      })
+      .catch((err) => {
+        console.log("err", err);
+      })
+  }
 };

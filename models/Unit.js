@@ -24,6 +24,10 @@ const UnitSchema = new mongoose.Schema({
   }],
 })
 
+UnitSchema.index({
+  unitName: "text",
+})
+
 module.exports = mongoose.model("unit", UnitSchema)
 
 
