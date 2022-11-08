@@ -3,9 +3,9 @@ const Class = require("../models/Class");
 module.exports = {
   getAllClasses(req, res) {
     Class.find({})
-      .populate('creator')
-      .populate('members')
-      .populate('units')
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .sort({ created: -1 })
       .then((data) => {
         console.log("got all classes");
@@ -19,6 +19,9 @@ module.exports = {
 
   getClassById(req, res) {
     Class.findById(req.body.id)
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((data) => {
         console.log("got the class has id " + req.body.id);
         res.send(data);
