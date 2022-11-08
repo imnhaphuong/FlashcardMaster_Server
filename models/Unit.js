@@ -1,22 +1,27 @@
 const mongoose = require('mongoose')
-
+const fcard = require('../models/Flashcard')
 const UnitSchema = new mongoose.Schema({
   unitName: {
     type: String,
     trim: true,
     required: [
       true,
-      "Topic name not provided. Cannot create topic without name",
     ],
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
   },
   fullname: String,
   mode: Boolean,
-  flashcards: [],
+  topic: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Topic',
+  },
+  flashcards: [{
+    type: String,
+    ref: fcard,
+  }],
 })
 
 module.exports = mongoose.model("unit", UnitSchema)
