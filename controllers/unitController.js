@@ -16,10 +16,6 @@ const unitController = {
   },
   createUnit(req, res) {
     console.log("create unit");
-<<<<<<< HEAD
-
-    try {      
-=======
     const arrFcard = [];
     try {
       const { flashcards } = req.body
@@ -33,7 +29,6 @@ const unitController = {
         arrFcard.push(new_fcard._id);
         new_fcard.save();
       })
->>>>>>> 27a4dd6296e865fa129aab130e5c7c626956b550
       const new_unit = new Unit({
         unitName: req.body.unitName,
         creator: req.body.userId,
@@ -49,11 +44,6 @@ const unitController = {
       console.log("err", err);
       res.status(500).send(err);
     }
-<<<<<<< HEAD
-  }
-
-
-=======
   },
   //get units are created by creator (use to get units are created by current user/account)
   getAllUnitsCreatedByCreator(req, res) {
@@ -101,6 +91,5 @@ const unitController = {
         console.log("err", err);
       })
   }
->>>>>>> 27a4dd6296e865fa129aab130e5c7c626956b550
 }
 module.exports = unitController;
