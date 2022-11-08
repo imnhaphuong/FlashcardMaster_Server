@@ -4,7 +4,7 @@ const uploadCloud = require("../utils/cloudinary.config");
 const unitController = {
   getAllUnits(req, res) {
     Unit.find({})
-      .populate('flashcards')
+      .populate("flashcards")
       .then((data) => {
         console.log("got all units");
         res.send(data);
@@ -18,7 +18,7 @@ const unitController = {
     console.log("create unit");
     const arrFcard = [];
     try {
-      const { flashcards } = req.body
+      const { flashcards } = req.body;
       flashcards.map((item, index) => {
         const new_fcard = new Flashcard({
           term: item.term,
@@ -28,7 +28,7 @@ const unitController = {
         });
         arrFcard.push(new_fcard._id);
         new_fcard.save();
-      })
+      });
       const new_unit = new Unit({
         unitName: req.body.unitName,
         creator: req.body.userId,
@@ -58,14 +58,12 @@ const unitController = {
       });
   },
 
-  //need to pass an array unit id and  
-  getUnitsByArrayId(req, res) {
-    console.log(req.body.id);
-    Unit.find({})
-      .where("_id")
-      .in(req.body.id)
+  //need to pass an array unit id and
+  getUnitById(req, res) {
+    Unit.findById(req.body.id)
+      .populate("flashcards")
       .then((data) => {
-        console.log("got all units created by " + req.body.id);
+        console.log("got the unit has id " + req.body.id);
         res.send(data);
       })
       .catch((err) => {
@@ -74,22 +72,23 @@ const unitController = {
       });
   },
 
-
   searchUnit(req, res) {
-    Unit.aggregate([{
-      $match: {
-        $text: {
-          $search: "/" + req.params.keyword + "/"
+    Unit.aggregate([
+      {
+        $match: {
+          $text: {
+            $search: "/" + req.params.keyword + "/",
+          },
         },
-      }
-    }])
+      },
+    ])
       .then((data) => {
         res.send(data);
         console.log("get unit by classname");
       })
       .catch((err) => {
         console.log("err", err);
-      })
-  }
-}
+      });
+  },
+};
 module.exports = unitController;

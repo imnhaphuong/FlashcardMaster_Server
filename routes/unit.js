@@ -9,8 +9,8 @@ router.post("/create", unitController.createUnit);
 router.post("/getAll", (req, res) => {
   unitController.getAllUnitsCreatedByCreator(req, res);
 });
-router.post("/array", (req, res) => {
-  unitController.getUnitsByArrayId(req, res);
+router.post("/", (req, res) => {
+  unitController.getUnitById(req, res);
 });
 
 router.get("/search/:keyword", (req, res) => {
