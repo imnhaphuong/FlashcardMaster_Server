@@ -5,7 +5,7 @@ const unitController = {
     Unit.find({})
       .then((data) => {
         console.log("got all units");
-        res.send(data);
+        res.send(data);W
       })
       .catch((err) => {
         console.log("err", err);
