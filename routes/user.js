@@ -4,7 +4,6 @@ const userController = require("../controllers/userController");
 const router = express.Router();
 const User = require("../models/User");
 
-router.get("/", userController.getAllUser);
 router.post("/id", userController.getUserByID);
 router.post("/create", userController.createUser);
 router.post("/signin", userController.signIn);
@@ -17,7 +16,7 @@ router.post("/signinGG", userController.signIn);
 router.get("/search/:keyword", (req, res) => {
   userController.searchUser(req,res);
 });
-
+router.get("/", userController.getAllUser);
 
 
 

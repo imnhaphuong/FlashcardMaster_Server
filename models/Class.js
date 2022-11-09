@@ -59,5 +59,8 @@ const ClassSchema = new mongoose.Schema({
     type: Number,
   },
 });
+ClassSchema.index({
+  name: "text",
+})
 
 module.exports = mongoose.model("class", ClassSchema);
