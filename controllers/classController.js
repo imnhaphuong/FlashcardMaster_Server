@@ -74,6 +74,9 @@ module.exports = {
 
   getClassByJCode(req, res) {
     Class.find({ jcode: req.body.jcode })
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((data) => {
         res.send(data);
         console.log("got the class has jcode " + req.body.jcode);
