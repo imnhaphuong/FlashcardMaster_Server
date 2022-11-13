@@ -74,6 +74,9 @@ module.exports = {
 
   getClassByJCode(req, res) {
     Class.find({ jcode: req.body.jcode })
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((data) => {
         res.send(data);
         console.log("got the class has jcode " + req.body.jcode);
@@ -83,16 +86,19 @@ module.exports = {
       });
   },
   searchClass(req, res) {
-    Class.find({
-      mode: 1,
-      name: req.body.key,
-    })
+    Class.aggregate([{
+      $match: {
+        $text: {
+          $search: "/" + req.params.keyword + "/"
+        },
+      }
+    }])
       .then((data) => {
         res.send(data);
-        console.log("get class by classname");
+        console.log("get class by name");
       })
       .catch((err) => {
         console.log("err", err);
-      });
-  },
+      })
+  }
 };
