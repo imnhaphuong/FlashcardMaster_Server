@@ -3,6 +3,9 @@ const Class = require("../models/Class");
 module.exports = {
   getAllClasses(req, res) {
     Class.find({})
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .sort({ created: -1 })
       .then((data) => {
         console.log("got all classes");
@@ -10,11 +13,15 @@ module.exports = {
       })
       .catch((err) => {
         console.log("err", err);
+        res.send([]);
       });
   },
 
   getClassById(req, res) {
     Class.findById(req.body.id)
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((data) => {
         console.log("got the class has id " + req.body.id);
         res.send(data);
@@ -76,19 +83,16 @@ module.exports = {
       });
   },
   searchClass(req, res) {
-    Class.aggregate([{
-      $match: {
-        $text: {
-          $search: "/" + req.params.keyword + "/"
-        },
-      }
-    }])
+    Class.find({
+      mode: 1,
+      name: req.body.key,
+    })
       .then((data) => {
         res.send(data);
         console.log("get class by classname");
       })
       .catch((err) => {
         console.log("err", err);
-      })
-  }
+      });
+  },
 };
