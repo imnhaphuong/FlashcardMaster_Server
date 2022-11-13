@@ -5,7 +5,6 @@ const Userschema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-
     },
     fullname: {
         type: String,
@@ -52,7 +51,7 @@ const Userschema = new mongoose.Schema({
         default: Date.now(),
     },
 
-}, { collection: 'users' })
+})
 let User = mongoose.model("users", Userschema);
 Userschema.index({
     email: "text",

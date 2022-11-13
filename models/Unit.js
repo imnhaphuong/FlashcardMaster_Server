@@ -17,6 +17,7 @@ const UnitSchema = new mongoose.Schema({
   topic: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Topic',
+    required: true,
   },
   flashcards: [{
     type: String,
@@ -27,7 +28,7 @@ const UnitSchema = new mongoose.Schema({
 UnitSchema.index({
   unitName: "text",
 })
-
+ 
 module.exports = mongoose.model("unit", UnitSchema)
 
 

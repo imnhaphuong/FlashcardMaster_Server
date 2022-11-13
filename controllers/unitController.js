@@ -18,7 +18,8 @@ const unitController = {
     console.log("create unit");
     const arrFcard = [];
     try {
-      const { flashcards } = req.body
+      const { flashcards,topic } = req.body
+      if(topic ==="") return res.json({ status: 'error', error: 'Vui lòng chọn một chủ đề' })
       flashcards.map((item, index) => {
         const new_fcard = new Flashcard({
           term: item.term,
@@ -34,6 +35,7 @@ const unitController = {
         creator: req.body.userId,
         fullname: req.body.fullname,
         mode: req.body.mode,
+        topic:req.body.topic,
         flashcards: arrFcard,
       });
       new_unit.save().then((data) => {
