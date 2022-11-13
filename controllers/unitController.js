@@ -15,6 +15,19 @@ const unitController = {
         res.send([]);
       });
   },
+  getAllCreatedUnits(req, res) {
+    Unit.find({creator : req.body.creator})
+      .populate("flashcards")
+      .populate("creator")
+      .then((data) => {
+        console.log("got all created units");
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send([]);
+      });
+  },
   createUnit(req, res) {
     console.log("create unit");
     const arrFcard = [];
