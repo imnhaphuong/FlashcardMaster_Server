@@ -5,6 +5,7 @@ const unitController = {
   getAllUnits(req, res) {
     Unit.find({})
       .populate("flashcards")
+      .populate("creator")
       .then((data) => {
         console.log("got all units");
         res.send(data);
