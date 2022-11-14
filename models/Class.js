@@ -53,12 +53,14 @@ const ClassSchema = new mongoose.Schema({
     default: Date.now,
   },
 
-  //mode = false private
-  //mode = true public
-  mode: Boolean,
+  //mode = 0 private
+  //mode = 1 public
+  mode: {
+    type: Number,
+  },
 });
 ClassSchema.index({
   name: "text",
-});
+})
 
 module.exports = mongoose.model("class", ClassSchema);

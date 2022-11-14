@@ -17,30 +17,31 @@ const unitController = {
   },
   getAllCreatedUnits(req, res) {
     let result = {};
-    Unit.find({ creator: req.body.creator, mode: true })
-      .populate("flashcards")
-      .populate("creator")
-      .then((publicData) => {
-        console.log("got all created units");
-        result.public = publicData;
-        Unit.find({ creator: req.body.creator, mode: false })
-          .populate("flashcards")
-          .populate("creator")
-          .then((privateData) => {
-            console.log("got all created units");
-            result.private = privateData;
-            res.send(result);
-          })
-          .catch((err) => {
-            console.log("err", err);
-            res.send(result);
-          });
-      })
-      .catch((err) => {
-        console.log("err", err);
-        res.send([]);
-      });
+    // Unit.find({ creator: req.body.creator, mode: true })
+    //   .populate("flashcards")
+    //   .populate("creator")
+    //   .then((publicData) => {
+    //     console.log("got all created units");
+    //     result.public = publicData;
+    //     Unit.find({ creator: req.body.creator, mode: false })
+    //       .populate("flashcards")
+    //       .populate("creator")
+    //       .then((privateData) => {
+    //         console.log("got all created units");
+    //         result.private = privateData;
+    //         res.send(result);
+    //       })
+    //       .catch((err) => {
+    //         console.log("err", err);
+    //         res.send(result);
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.log("err", err);
+    //     res.send([]);
+    //   });
   },
+
   createUnit(req, res) {
     console.log("create unit");
     const arrFcard = [];
