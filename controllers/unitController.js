@@ -16,12 +16,25 @@ const unitController = {
       });
   },
   getAllCreatedUnits(req, res) {
-    Unit.find({ creator: req.body.creator })
+    let result = {};
+    Unit.find({ creator: req.body.creator, mode: true })
       .populate("flashcards")
       .populate("creator")
-      .then((data) => {
+      .then((publicData) => {
         console.log("got all created units");
-        res.send(data);
+        result.public = publicData;
+        Unit.find({ creator: req.body.creator, mode: false })
+          .populate("flashcards")
+          .populate("creator")
+          .then((privateData) => {
+            console.log("got all created units");
+            result.private = privateData;
+            res.send(result);
+          })
+          .catch((err) => {
+            console.log("err", err);
+            res.send(result);
+          });
       })
       .catch((err) => {
         console.log("err", err);

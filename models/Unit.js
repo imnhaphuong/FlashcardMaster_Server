@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const fcard = require("../models/Flashcard");
 const User = require("../models/User");
+const Topic = require("../models/Topic");
+const Class = require("../models/Class");
 const UnitSchema = new mongoose.Schema({
   unitName: {
     type: String,
@@ -15,14 +17,15 @@ const UnitSchema = new mongoose.Schema({
   mode: Boolean,
   topic: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Topic",
+    ref: Topic,
   },
   flashcards: [
     {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: fcard,
     },
   ],
+  classes: [{ type: mongoose.Schema.Types.ObjectId, ref: Class }]
 });
 
 UnitSchema.index({
