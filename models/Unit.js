@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const fcard = require("../models/Flashcard");
 const User = require("../models/User");
-const Topic = require("../models/Topic");
 
 const UnitSchema = new mongoose.Schema({
   unitName: {
@@ -17,7 +16,6 @@ const UnitSchema = new mongoose.Schema({
   mode: Boolean,
   topic: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: Topic,
   },
   flashcards: [
     {
