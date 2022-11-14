@@ -53,10 +53,10 @@ const ClassSchema = new mongoose.Schema({
     default: Date.now,
   },
 
-  //mode = 0 private
-  //mode = 1 public
+  //mode = false private
+  //mode = true public
   mode: {
-    type: Number,
+    type: Boolean,
   },
 });
 ClassSchema.index({
