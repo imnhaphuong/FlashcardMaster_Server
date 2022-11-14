@@ -16,7 +16,7 @@ const unitController = {
       });
   },
   getAllCreatedUnits(req, res) {
-    Unit.find({creator : req.body.creator})
+    Unit.find({ creator: req.body.creator })
       .populate("flashcards")
       .populate("creator")
       .then((data) => {

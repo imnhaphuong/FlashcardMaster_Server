@@ -85,6 +85,7 @@ module.exports = {
         console.log("err", err);
       });
   },
+
   searchClass(req, res) {
     Class.aggregate([{
       $match: {
@@ -100,5 +101,6 @@ module.exports = {
       .catch((err) => {
         console.log("err", err);
       })
-  }
+  },
 };
+
