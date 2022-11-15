@@ -31,4 +31,8 @@ router.post("/", (req, res) => {
   }
 });
 
+router.post("/imp", (req, res) => {
+  controller.impUnit(req, res);
+});
+
 module.exports = router;

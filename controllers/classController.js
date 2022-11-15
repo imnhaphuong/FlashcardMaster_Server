@@ -87,20 +87,33 @@ module.exports = {
   },
 
   searchClass(req, res) {
-    Class.aggregate([{
-      $match: {
-        $text: {
-          $search: "/" + req.params.keyword + "/"
+    Class.aggregate([
+      {
+        $match: {
+          $text: {
+            $search: "/" + req.params.keyword + "/",
+          },
         },
-      }
-    }])
+      },
+    ])
       .then((data) => {
         res.send(data);
         console.log("get class by name");
       })
       .catch((err) => {
         console.log("err", err);
+      });
+  },
+  impUnit(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      units: req.body.units,
+    })
+      .then((data) => {
+        res.send(data);
+        console.log("updated units of the class" + req.body.id);
       })
+      .catch((err) => {
+        console.log("err", err);
+      });
   },
 };
-

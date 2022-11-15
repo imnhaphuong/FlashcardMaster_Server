@@ -20,4 +20,8 @@ router.get("/search/:keyword", (req, res) => {
   unitController.searchUnit(req, res);
 });
 
+router.post("/add", (req, res) => {
+  unitController.addToClass(req, res);
+});
+
 module.exports = router;
