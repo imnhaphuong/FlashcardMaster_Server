@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const router = express.Router();
 
 const controller = require("../controllers/topicController");
-
+router.get("/:id", (req, res) => {
+  controller.getTopicsByID(req, res);
+}),
 router.get("/", (req, res) => {
   controller.getAllTopics(req, res);
 }),

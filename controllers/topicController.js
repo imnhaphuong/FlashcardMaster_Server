@@ -14,6 +14,18 @@ module.exports = {
         res.send([]);
       });
   },
+  getTopicsByID(req, res) {
+    Topic.findById(req.params.id)
+    .populate("units")
+    .then((data) => {
+      console.log("get topic by topic_id");
+      res.send(data);
+    })
+    .catch((err) =>{
+      console.log("err", err);
+      res.send([]);
+    });
+  },
   createTopic(req, res) {
     console.log("create topics");
     const new_topic = new Topic({
