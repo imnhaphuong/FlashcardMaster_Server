@@ -35,4 +35,11 @@ router.post("/imp", (req, res) => {
   controller.impUnit(req, res);
 });
 
+router.post("/kick", (req, res) => {
+  controller.kick(req, res);
+});
+router.post("/join", (req, res) => {
+  controller.join(req, res);
+});
+
 module.exports = router;
