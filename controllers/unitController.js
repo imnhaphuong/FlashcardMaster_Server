@@ -144,10 +144,8 @@ const unitController = {
         re_Topic.save().catch((err) => {
           console.log(err)
         });
-        unit.topic = topic;
+
         const {value}=topic
-        console.log("topic",topic)
-        console.log("value",value)
 
         const add_Topic = await Topic.findById(topic)
         console.log("add_Topic",add_Topic)     
@@ -155,12 +153,26 @@ const unitController = {
         add_Topic.save().catch((err) => {
           console.log(err)
         });
+        unit.topic = topic;
+      }else{
+        unit.topic=topic;
       }
 
       flashcards.map(async (item, index) => {
-        console.log("sdfafdsf");
-        const fcard = await Flashcard.findById(item._id)
-        if (!fcard) {
+        console.log("sdfafdsf",item);
+        if (item._id!=='') {
+          const fcard = await Flashcard.findById(item._id)
+          console.log("fcard",fcard)
+          // fcard.term = item.term;
+          fcard.define = item.define;
+          fcard.example = item.examplep;
+          fcard.image = item.image;
+          
+          fcard.save().catch((err) => {
+            console.log(err)
+          });
+          console.log("old",fcard)
+        } else {
           const new_fcard = new Flashcard({
             term: item.term,
             define: item.define,
@@ -170,15 +182,6 @@ const unitController = {
           unit.flashcards.push(new_fcard._id);
           console.log("new", unit.flashcards)
           new_fcard.save();
-        } else {
-          fcard.term = item.term;
-          fcard.define = item.define;
-          fcard.example = item.examplep;
-          fcard.image = item.image;
-          console.log("old")
-          fcard.save().catch((err) => {
-            console.log(err)
-          });
         }
       });
       setTimeout(() => {
