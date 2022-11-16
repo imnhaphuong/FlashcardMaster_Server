@@ -9,12 +9,15 @@ router.post("/create", unitController.createUnit);
 router.post("/getAll", (req, res) => {
   unitController.getAllUnitsCreatedByCreator(req, res);
 });
-router.post("/", (req, res) => {
+router.post("/id", (req, res) => {
   unitController.getUnitById(req, res);
 });
 
 router.get("/search/:keyword", (req, res) => {
   unitController.searchUnit(req, res);
 });
+router.put("/update", unitController.updateUnit);
+router.post("/deleted", unitController.deleteUnit);
+
 
 module.exports = router;

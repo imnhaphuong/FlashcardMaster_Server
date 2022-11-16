@@ -59,4 +59,4 @@ Userschema.index({
   email: "text",
 });
 
-module.exports = mongoose.model("users", Userschema);
+module.exports = mongoose.model("user", Userschema);

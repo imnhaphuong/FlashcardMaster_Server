@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 const fcard = require('../models/Flashcard')
+const user = require('../models/User')
+const topic = require('../models/Topic')
+
 const UnitSchema = new mongoose.Schema({
   unitName: {
     type: String,
@@ -10,7 +13,7 @@ const UnitSchema = new mongoose.Schema({
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: user,
   },
   fullname: String,
   mode: Boolean,
