@@ -23,4 +23,8 @@ router.put("/update", unitController.updateUnit);
 router.post("/deleted", unitController.deleteUnit);
 
 
+router.post("/add", (req, res) => {
+  unitController.addToClass(req, res);
+});
+
 module.exports = router;

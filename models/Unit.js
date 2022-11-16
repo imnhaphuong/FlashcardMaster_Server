@@ -26,7 +26,11 @@ const UnitSchema = new mongoose.Schema({
       ref: fcard,
     },
   ],
-  classes: [{ type: mongoose.Schema.Types.ObjectId, ref: Class }]
+  classes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  ],
 });
 
 UnitSchema.index({

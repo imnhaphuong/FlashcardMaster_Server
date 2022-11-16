@@ -204,6 +204,19 @@ const unitController = {
       res.status(500).send(err);
     };
 
-  }
+  },
+
+  addToClass(req, res) {
+    Unit.findByIdAndUpdate(req.body.id, {
+      $addToSet: { classes: req.body.class },
+    })
+      .then((data) => {
+        console.log("updated classes of the unit " + req.body.id);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
 };
 module.exports = unitController;

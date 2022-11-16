@@ -55,10 +55,12 @@ const ClassSchema = new mongoose.Schema({
 
   //mode = false private
   //mode = true public
-  mode: Boolean,
+  mode: {
+    type: Boolean,
+  },
 });
 ClassSchema.index({
   name: "text",
-});
+})
 
 module.exports = mongoose.model("class", ClassSchema);
