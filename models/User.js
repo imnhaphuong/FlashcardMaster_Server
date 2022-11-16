@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const Userschema = new mongoose.Schema(
   {
     email: {
-      type: String,
-      required: true,
-      unique: true,
+        type: String,
+        required: true,
+        unique: true,
     },
     fullname: {
       type: String,
@@ -59,4 +59,4 @@ Userschema.index({
   email: "text",
 });
 
-module.exports = mongoose.model("users", Userschema);
+module.exports = mongoose.model("user", Userschema);

@@ -12,13 +12,16 @@ router.post("/getAll", (req, res) => {
 router.post("/created", (req, res) => {
   unitController.getAllCreatedUnits(req, res);
 });
-router.post("/", (req, res) => {
+router.post("/id", (req, res) => {
   unitController.getUnitById(req, res);
 });
 
 router.get("/search/:keyword", (req, res) => {
   unitController.searchUnit(req, res);
 });
+router.put("/update", unitController.updateUnit);
+router.post("/deleted", unitController.deleteUnit);
+
 
 router.post("/add", (req, res) => {
   unitController.addToClass(req, res);

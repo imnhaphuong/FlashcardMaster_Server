@@ -9,8 +9,14 @@ const FcardSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  example: String,
-  image: String,
+  example: {
+    type:String,
+    default:"", 
+  },
+  image: {
+    type:String,
+    default:"", 
+  },
 })
 
 module.exports = mongoose.model("flashcard", FcardSchema)
