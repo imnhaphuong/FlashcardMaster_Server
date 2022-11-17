@@ -127,14 +127,17 @@ const unitController = {
       });
   },
   updateUnit: async (req, res) => {
-    const { _id, flashcards, topic, unitName, mode } = req.body;
-
+    const { _id, flashcards, unitName, mode } = req.body;
+    let {topic}=req.body;
+    if(typeof topic =="object"){
+      topic=req.body.topic.value;
+    }
     console.log("req.body", req.body)
     try {
       const unit = await Unit.findById(_id)
       unit.unitName = unitName;
       unit.mode = mode;
-      if (unit.topic !== topic.value) {
+      if (unit.topic !== topic) {
         //remove
         const re_Topic = await Topic.findById(unit.topic)
         var index = re_Topic.units.indexOf(unit._id.toString())
@@ -198,9 +201,13 @@ const unitController = {
     };
   },
   deleteUnit: async (req, res) => {
-    const { _id } = req.body
+    const { _id,flashcards } = req.body
     try {
-      await Unit.findByIdAndDelete(_id).populate("flashcards")
+      const unit = await Unit.findById(_id);     
+      unit.flashcards.map(async (item, index) => {
+        await Flashcard.findByIdAndDelete(item._id)
+      })
+      await Unit.findByIdAndDelete(_id).populate("flashcards");
       return res.json({ status: '200', message: 'Xóa thành công' })
     } catch (err) {
       console.log("err", err);
