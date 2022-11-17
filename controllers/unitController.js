@@ -129,9 +129,9 @@ const unitController = {
   updateUnit: async (req, res) => {
     const { _id, flashcards, unitName, mode } = req.body;
     let {topic}=req.body;
-    if(typeof topic =="object"){
-      topic=req.body.topic.value;
-    }
+    // if(typeof topic =="object"){
+    //   topic=req.body.topic.value;
+    // }
     console.log("req.body", req.body)
     try {
       const unit = await Unit.findById(_id)
