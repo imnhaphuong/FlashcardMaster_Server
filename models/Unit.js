@@ -16,6 +16,7 @@ const UnitSchema = new mongoose.Schema({
   mode: Boolean,
   topic: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Topic',
     required: true,
   },
   flashcards: [

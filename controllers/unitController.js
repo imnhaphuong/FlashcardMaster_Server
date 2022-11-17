@@ -127,14 +127,17 @@ const unitController = {
       });
   },
   updateUnit: async (req, res) => {
-    const { _id, flashcards, topic, unitName, mode } = req.body;
-
+    const { _id, flashcards, unitName, mode } = req.body;
+    let {topic}=req.body;
+    if(typeof topic =="object"){
+      topic=req.body.topic.value;
+    }
     console.log("req.body", req.body)
     try {
       const unit = await Unit.findById(_id)
       unit.unitName = unitName;
       unit.mode = mode;
-      if (unit.topic !== topic.value) {
+      if (unit.topic !== topic) {
         //remove
         const re_Topic = await Topic.findById(unit.topic)
         var index = re_Topic.units.indexOf(unit._id.toString())
@@ -144,10 +147,8 @@ const unitController = {
         re_Topic.save().catch((err) => {
           console.log(err)
         });
-        unit.topic = topic;
+
         const {value}=topic
-        console.log("topic",topic)
-        console.log("value",value)
 
         const add_Topic = await Topic.findById(topic)
         console.log("add_Topic",add_Topic)     
@@ -155,12 +156,26 @@ const unitController = {
         add_Topic.save().catch((err) => {
           console.log(err)
         });
+        unit.topic = topic;
+      }else{
+        unit.topic=topic;
       }
 
       flashcards.map(async (item, index) => {
-        console.log("sdfafdsf");
-        const fcard = await Flashcard.findById(item._id)
-        if (!fcard) {
+        console.log("sdfafdsf",item);
+        if (item._id!=='') {
+          const fcard = await Flashcard.findById(item._id)
+          console.log("fcard",fcard)
+          // fcard.term = item.term;
+          fcard.define = item.define;
+          fcard.example = item.examplep;
+          fcard.image = item.image;
+          
+          fcard.save().catch((err) => {
+            console.log(err)
+          });
+          console.log("old",fcard)
+        } else {
           const new_fcard = new Flashcard({
             term: item.term,
             define: item.define,
@@ -170,15 +185,6 @@ const unitController = {
           unit.flashcards.push(new_fcard._id);
           console.log("new", unit.flashcards)
           new_fcard.save();
-        } else {
-          fcard.term = item.term;
-          fcard.define = item.define;
-          fcard.example = item.examplep;
-          fcard.image = item.image;
-          console.log("old")
-          fcard.save().catch((err) => {
-            console.log(err)
-          });
         }
       });
       setTimeout(() => {
@@ -195,9 +201,13 @@ const unitController = {
     };
   },
   deleteUnit: async (req, res) => {
-    const { _id } = req.body
+    const { _id,flashcards } = req.body
     try {
-      await Unit.findByIdAndDelete(_id).populate("flashcards")
+      const unit = await Unit.findById(_id);     
+      unit.flashcards.map(async (item, index) => {
+        await Flashcard.findByIdAndDelete(item._id)
+      })
+      await Unit.findByIdAndDelete(_id).populate("flashcards");
       return res.json({ status: '200', message: 'Xóa thành công' })
     } catch (err) {
       console.log("err", err);
