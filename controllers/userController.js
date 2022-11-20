@@ -1,7 +1,6 @@
-const { User } = require("../models/User");
+const User = require("../models/User");
 const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const {
     generateOTP,
     mailTransport,
@@ -23,6 +22,7 @@ const uid = new ShortUniqueId({
 const userController = {
     //Create
     createUser: async (req, res) => {
+        
         const deFullName = 'user' + uid.randomUUID(4);
         const { email } = req.body
         const user = await User.findOne({ email });
@@ -121,7 +121,7 @@ const userController = {
     getAllUser: async (req, res) => {
         try {
             // const UserByID = new User(req.body);        
-            User.find().then(data => res.send(data));
+            User.find({}).then(data => res.send(data));
         } catch (err) {
             res.status(500).json(err);// HTTP REQUEST CODE
 
