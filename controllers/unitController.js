@@ -129,10 +129,9 @@ const unitController = {
   updateUnit: async (req, res) => {
     const { _id, flashcards, unitName, mode } = req.body;
     let {topic}=req.body;
-    // if(typeof topic =="object"){
-    //   topic=req.body.topic.value;
-    // }
-    console.log("req.body", req.body)
+    if(typeof topic =="object"){
+      topic=req.body.topic.value;
+    }
     try {
       const unit = await Unit.findById(_id)
       unit.unitName = unitName;
@@ -148,10 +147,7 @@ const unitController = {
           console.log(err)
         });
 
-        const {value}=topic
-
-        const add_Topic = await Topic.findById(topic)
-        console.log("add_Topic",add_Topic)     
+        const add_Topic = await Topic.findById(topic)  
         add_Topic.units.push(unit._id)
         add_Topic.save().catch((err) => {
           console.log(err)
@@ -162,11 +158,10 @@ const unitController = {
       }
 
       flashcards.map(async (item, index) => {
-        console.log("sdfafdsf",item);
         if (item._id!=='') {
           const fcard = await Flashcard.findById(item._id)
           console.log("fcard",fcard)
-          // fcard.term = item.term;
+          fcard.term = item.term;
           fcard.define = item.define;
           fcard.example = item.examplep;
           fcard.image = item.image;
@@ -200,14 +195,17 @@ const unitController = {
       res.status(500).send(err);
     };
   },
+    
   deleteUnit: async (req, res) => {
-    const { _id,flashcards } = req.body
-    try {
-      const unit = await Unit.findById(_id);     
+    console.log("delete Unit")
+    const { _id } = req.body
+    try {    
+      const unit = await Unit.findById(_id)    
       unit.flashcards.map(async (item, index) => {
-        await Flashcard.findByIdAndDelete(item._id)
+        console.log("item_id",item);
+        await Flashcard.findByIdAndDelete(item)
       })
-      await Unit.findByIdAndDelete(_id).populate("flashcards");
+      await Unit.findByIdAndDelete(_id)
       return res.json({ status: '200', message: 'Xóa thành công' })
     } catch (err) {
       console.log("err", err);

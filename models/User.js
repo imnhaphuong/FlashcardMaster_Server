@@ -52,7 +52,6 @@ const Userschema = new mongoose.Schema(
       default: Date.now(),
     },
   },
-  { collection: "users" }
 );
 
 Userschema.index({
