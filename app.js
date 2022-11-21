@@ -14,7 +14,11 @@ const topicAPI = require("./routes/topic")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+app.use("/", (req, res) => {
+  res.send({
+    status: "success",
+  });
+});
 app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
 app.use("/api/units", unitAPI);
