@@ -36,6 +36,7 @@ module.exports = {
       name: req.body.name,
       creator: req.body.creator,
       mode: req.body.mode,
+      members: [req.body.creator]
     });
     my_class
       .save()
