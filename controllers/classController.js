@@ -36,6 +36,7 @@ module.exports = {
       name: req.body.name,
       creator: req.body.creator,
       mode: req.body.mode,
+      members: [req.body.creator]
     });
     my_class
       .save()
@@ -111,6 +112,30 @@ module.exports = {
       .then((data) => {
         res.send(data);
         console.log("updated units of the class" + req.body.id);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
+  join(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      $addToSet: { members: req.body.member },
+    })
+      .then((data) => {
+        console.log("updated members of the class" + req.body.id);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
+  kick(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      $pull: { members: req.body.member },
+    })
+      .then((data) => {
+        res.send(data);
+        console.log("updated members of the class" + req.body.id);
       })
       .catch((err) => {
         console.log("err", err);
