@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const VerificationTokenSchema = new mongoose.Schema({
     owner:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
         required:true,
     },
     token:{
@@ -13,7 +12,7 @@ const VerificationTokenSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        expires:360,
+        expires:180,
         default: Date.now(),
     },
 
