@@ -22,7 +22,7 @@ const uid = new ShortUniqueId({
 const userController = {
     //Create
     createUser: async (req, res) => {
-        
+
         const deFullName = 'user' + uid.randomUUID(4);
         const { email } = req.body
         const user = await User.findOne({ email });
@@ -36,7 +36,7 @@ const userController = {
         console.log('User created successfully: ', newUser)
 
         const OTP = generateOTP()
-        const verificationToken = new VerificationToken({
+        const verificationToken = await new VerificationToken({
             owner: newUser._id,
             token: OTP
         })
@@ -44,7 +44,7 @@ const userController = {
         await verificationToken.save();
         await newUser.save();
         //send verification mail to user
-        await mailTransport(newUser.email, OTP)
+        await mailTransport(email, OTP)
         res.status(200);// HTTP REQUEST CODE
 
         res.json({ status: 'ok', user: newUser })
@@ -53,10 +53,10 @@ const userController = {
         const { userId, email } = req.body
         const OTP = generateOTP()
         const token = await VerificationToken.findOne({ owner: userId })
-        if (token._id) {
+        if (token !== null) {
             await VerificationToken.findByIdAndDelete(token._id)
         }
-        const verificationToken = new VerificationToken({
+        const verificationToken = await new VerificationToken({
             owner: userId,
             token: OTP
         })
@@ -164,20 +164,20 @@ const userController = {
     },
     searchUser(req, res) {
         User.aggregate([{
-          $match: {
-            $text: {
-              $search: "/" + req.params.keyword + "/"
-            },
-          }
+            $match: {
+                $text: {
+                    $search: "/" + req.params.keyword + "/"
+                },
+            }
         }])
-          .then((data) => {
-            res.send(data);
-            console.log("get user by email");
-          })
-          .catch((err) => {
-            console.log("err", err);
-          })
-      }
+            .then((data) => {
+                res.send(data);
+                console.log("get user by email");
+            })
+            .catch((err) => {
+                console.log("err", err);
+            })
+    }
 };
 
 module.exports = userController;
