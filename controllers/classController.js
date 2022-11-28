@@ -1,7 +1,8 @@
 const Class = require("../models/Class");
 
+
 module.exports = {
-  getAllClasses(req, res) {
+ getAllClasses(req, res) {
     Class.find({})
       .populate("creator")
       .populate("members")
@@ -36,13 +37,14 @@ module.exports = {
       name: req.body.name,
       creator: req.body.creator,
       mode: req.body.mode,
-      members: [req.body.creator]
+      members: [req.body.creator],
+      jcode: this.makeJCode(12),
     });
     my_class
       .save()
       .then((data) => {
         res.send(data);
-        console.log("create new class success");
+        console.log(`create new class ${data.jcode} success`);
       })
       .catch((err) => {
         console.log("err", err);
@@ -141,4 +143,14 @@ module.exports = {
         console.log("err", err);
       });
   },
+  makeJCode(length) {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_-+=";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  } 
 };
