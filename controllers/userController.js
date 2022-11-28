@@ -41,10 +41,11 @@ const userController = {
             token: OTP
         })
         console.log("verification", verificationToken);
-        await verificationToken.save();
-        await newUser.save();
         //send verification mail to user
         await mailTransport(email, OTP)
+        await verificationToken.save();
+        await newUser.save();
+        
         res.status(200);// HTTP REQUEST CODE
 
         res.json({ status: 'ok', user: newUser })
@@ -56,7 +57,7 @@ const userController = {
         if (token !== null) {
             await VerificationToken.findByIdAndDelete(token._id)
         }
-        const verificationToken = await new VerificationToken({
+        const verificationToken = new VerificationToken({
             owner: userId,
             token: OTP
         })
