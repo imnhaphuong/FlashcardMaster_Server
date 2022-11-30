@@ -35,8 +35,8 @@ router.post("/imp", (req, res) => {
   controller.impUnit(req, res);
 });
 
-router.post("/creator",(req,res) => {
-  controller.getClassCreatedByUser(req,res);
+router.post("/created",(req,res) => {
+  controller.getAllCreatedClasses(req,res);
 })
 router.post("/kick", (req, res) => {
   controller.kick(req, res);

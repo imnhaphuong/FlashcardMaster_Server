@@ -120,16 +120,16 @@ module.exports = {
         console.log("err", err);
       });
   },
-  getClassCreatedByUser(req, res) {
+  getAllCreatedClasses(req, res) {
     let result = {};
-    Class.find({ creator: req.body.UserId, mode: true })
+    Class.find({ creator: req.body.creator, mode: true })
     .populate("creator")
     .populate("members")
     .populate("units")
       .then((publicData) => {
         console.log("got all created classes public");
         result.public = publicData;
-        Class.find({ creator: req.body.UserId, mode: false })
+        Class.find({ creator: req.body.creator, mode: false })
           .populate("creator")
           .populate("members")
           .populate("units")

@@ -6,9 +6,7 @@ const unitController = require("../controllers/unitController");
 
 router.get("/", unitController.getAllUnits);
 router.post("/create", unitController.createUnit);
-router.post("/getAll", (req, res) => {
-  unitController.getAllUnitsCreatedByCreator(req, res);
-});
+
 router.post("/created", (req, res) => {
   unitController.getAllCreatedUnits(req, res);
 });

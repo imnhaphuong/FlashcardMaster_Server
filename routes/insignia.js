@@ -6,8 +6,4 @@ const controller = require("../controllers/insigniaController");
 router.get("/", (req, res) => {
     controller.getAllInsignias(req, res);
 }),
-router.post("/byUser", (req, res) => {
-    controller.getAllIndigniaByUserId(req, res);
-})
-
     module.exports = router;

@@ -13,19 +13,4 @@ module.exports = {
                 res.send([]);
             });
     },
-    // getAllIndigniaByUserId(req, res) {
-    //     var UserId = req.body.userid;
-    //     console.log(UserId)
-    //     User.findById({UserId}).then((data) => {
-    //         Insignia.findById({id: data.insignia})
-    //         .then((newdata) =>{
-    //             res.send(newdata);
-    //             console.log("get all insignia by user" + data)
-    //         })
-    //         .catch((err) => {
-    //             console.log("err", err);
-    //             res.send([]);
-    //         })
-    //     })
-    // }
 }

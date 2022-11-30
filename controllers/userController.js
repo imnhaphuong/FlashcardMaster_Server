@@ -47,7 +47,7 @@ const userController = {
         await mailTransport(email, OTP)
         await verificationToken.save();
         await newUser.save();
-        
+
         res.status(200);// HTTP REQUEST CODE
 
         res.json({ status: 'ok', user: newUser })
@@ -183,7 +183,7 @@ const userController = {
             .catch((err) => {
                 console.log("err", err);
             })
-    }
+    },
 };
 
 module.exports = userController;
