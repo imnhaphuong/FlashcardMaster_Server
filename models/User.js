@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Insignia = require("../models/Insignia")
 
 const Userschema = new mongoose.Schema(
   {
@@ -51,6 +52,10 @@ const Userschema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    insignia:[{
+      type: String,
+      ref: Insignia,
+    }]
   },
 );
 

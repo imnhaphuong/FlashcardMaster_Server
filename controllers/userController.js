@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Bcrypt = require("bcryptjs");
+const Insignia = require("../models/Insignia");
 const jwt = require("jsonwebtoken");
 const {
     generateOTP,
@@ -9,6 +10,7 @@ const {
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
 const { default: ShortUniqueId } = require('short-unique-id');
+const { request } = require("express");
 const uid = new ShortUniqueId({
     dictionary: [
         '0', '1', '2', '3',
@@ -22,7 +24,7 @@ const uid = new ShortUniqueId({
 const userController = {
     //Create
     createUser: async (req, res) => {
-        
+
         const deFullName = 'user' + uid.randomUUID(4);
         const { email } = req.body
         const user = await User.findOne({ email });
@@ -110,18 +112,21 @@ const userController = {
     },
     //Get by id
     getUserByID: async (req, res) => {
-        try {
-            User.findById(req.body).then(data => res.send(data));
-        } catch (err) {
-            console.log(err);
-            res.send([])
-        }
+        User.findById(req.body.id)
+            .populate("insignia")
+            .then((data) => {
+                console.log("got the user has id " + req.body.id);
+                res.send(data);
+            })
+            .catch((err) => {
+                console.log("err", err);
+            });
     },
     //getAllUser
     getAllUser: async (req, res) => {
         try {
             // const UserByID = new User(req.body);        
-            User.find({}).then(data => res.send(data));
+            User.find({}).populate("insignia").then(data => res.send(data));
         } catch (err) {
             res.status(500).json(err);// HTTP REQUEST CODE
 
@@ -164,20 +169,21 @@ const userController = {
     },
     searchUser(req, res) {
         User.aggregate([{
-          $match: {
-            $text: {
-              $search: "/" + req.params.keyword + "/"
-            },
-          }
+            $match: {
+                $text: {
+                    $search: "/" + req.params.keyword + "/"
+                },
+            }
         }])
-          .then((data) => {
-            res.send(data);
-            console.log("get user by email");
-          })
-          .catch((err) => {
-            console.log("err", err);
-          })
-      }
+            .then((data) => {
+                res.send(data);
+                console.log("get user by email");
+            })
+            .catch((err) => {
+                console.log("err", err);
+            })
+    },
+
 };
 
 module.exports = userController;

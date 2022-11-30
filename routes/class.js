@@ -35,4 +35,7 @@ router.post("/imp", (req, res) => {
   controller.impUnit(req, res);
 });
 
+router.post("/creator",(req,res) => {
+  controller.getClassCreatedByUser(req,res);
+})
 module.exports = router;

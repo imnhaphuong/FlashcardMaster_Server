@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userController = require("../controllers/userController");
 const router = express.Router();
-const User = require("../models/User");
 
 router.post("/id", userController.getUserByID);
 router.post("/create", userController.createUser);

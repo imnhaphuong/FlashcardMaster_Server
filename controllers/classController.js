@@ -1,4 +1,5 @@
 const Class = require("../models/Class");
+const User = require("../models/User");
 
 module.exports = {
   getAllClasses(req, res) {
@@ -114,6 +115,34 @@ module.exports = {
       })
       .catch((err) => {
         console.log("err", err);
+      });
+  },
+  getClassCreatedByUser(req, res) {
+    let result = {};
+    Class.find({ creator: req.body.UserId, mode: true })
+    .populate("creator")
+    .populate("members")
+    .populate("units")
+      .then((publicData) => {
+        console.log("got all created classes public");
+        result.public = publicData;
+        Class.find({ creator: req.body.UserId, mode: false })
+          .populate("creator")
+          .populate("members")
+          .populate("units")
+          .then((privateData) => {
+            console.log("got all created classes private");
+            result.private = privateData;
+            res.send(result);
+          })
+          .catch((err) => {
+            console.log("err", err);
+            res.send(result);
+          });
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send([]);
       });
   },
 };
