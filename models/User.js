@@ -6,7 +6,6 @@ const Userschema = new mongoose.Schema(
     email: {
         type: String,
         required: true,
-        unique: true,
     },
     fullname: {
       type: String,
@@ -50,7 +49,7 @@ const Userschema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
     insignia:[{
       type: String,

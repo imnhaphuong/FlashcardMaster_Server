@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const VerificationTokenSchema = new mongoose.Schema({
     owner:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
         required:true,
     },
     token:{
@@ -13,8 +12,9 @@ const VerificationTokenSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        expires:360,
-        default: Date.now(),
+        expires:600,
+        index: true,
+        default: Date.now,
     },
 
 });
@@ -31,4 +31,4 @@ VerificationTokenSchema.methods.compareToken = async function (token) {
     return result;
 }
 
-module.exports = mongoose.model("VerificationToken", VerificationTokenSchema) ;
+module.exports = mongoose.model("verificationToken", VerificationTokenSchema) ;

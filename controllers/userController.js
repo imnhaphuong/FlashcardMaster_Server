@@ -38,15 +38,16 @@ const userController = {
         console.log('User created successfully: ', newUser)
 
         const OTP = generateOTP()
-        const verificationToken = new VerificationToken({
+        const verificationToken = await new VerificationToken({
             owner: newUser._id,
             token: OTP
         })
         console.log("verification", verificationToken);
+        //send verification mail to user
+        await mailTransport(email, OTP)
         await verificationToken.save();
         await newUser.save();
-        //send verification mail to user
-        await mailTransport(newUser.email, OTP)
+        
         res.status(200);// HTTP REQUEST CODE
 
         res.json({ status: 'ok', user: newUser })
@@ -55,7 +56,7 @@ const userController = {
         const { userId, email } = req.body
         const OTP = generateOTP()
         const token = await VerificationToken.findOne({ owner: userId })
-        if (token._id) {
+        if (token !== null) {
             await VerificationToken.findByIdAndDelete(token._id)
         }
         const verificationToken = new VerificationToken({
@@ -182,8 +183,7 @@ const userController = {
             .catch((err) => {
                 console.log("err", err);
             })
-    },
-
+    }
 };
 
 module.exports = userController;

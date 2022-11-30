@@ -38,4 +38,11 @@ router.post("/imp", (req, res) => {
 router.post("/creator",(req,res) => {
   controller.getClassCreatedByUser(req,res);
 })
+router.post("/kick", (req, res) => {
+  controller.kick(req, res);
+});
+router.post("/join", (req, res) => {
+  controller.join(req, res);
+});
+
 module.exports = router;

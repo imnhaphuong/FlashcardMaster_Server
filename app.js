@@ -15,7 +15,11 @@ const insigniaAPI = require("./routes/insignia");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+app.get("/", (req, res) => {
+  res.send({
+    status: "success",
+  });
+});
 app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
 app.use("/api/units", unitAPI);

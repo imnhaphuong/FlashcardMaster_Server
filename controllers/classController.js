@@ -1,8 +1,9 @@
 const Class = require("../models/Class");
 const User = require("../models/User");
 
+
 module.exports = {
-  getAllClasses(req, res) {
+ getAllClasses(req, res) {
     Class.find({})
       .populate("creator")
       .populate("members")
@@ -37,12 +38,14 @@ module.exports = {
       name: req.body.name,
       creator: req.body.creator,
       mode: req.body.mode,
+      members: [req.body.creator],
+      jcode: this.makeJCode(12),
     });
     my_class
       .save()
       .then((data) => {
         res.send(data);
-        console.log("create new class success");
+        console.log(`create new class ${data.jcode} success`);
       })
       .catch((err) => {
         console.log("err", err);
@@ -145,4 +148,38 @@ module.exports = {
         res.send([]);
       });
   },
+  join(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      $addToSet: { members: req.body.member },
+    })
+      .then((data) => {
+        console.log("updated members of the class" + req.body.id);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
+  kick(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      $pull: { members: req.body.member },
+    })
+      .then((data) => {
+        res.send(data);
+        console.log("updated members of the class" + req.body.id);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
+  makeJCode(length) {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_-+=";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  } 
 };
