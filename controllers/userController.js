@@ -93,8 +93,7 @@ const userController = {
     //sign in
     signIn: async (req, res) => {
         try {
-            const user = await User.findOne({ email: req.body.email }).populate("Insignia");
-            
+            const user = await User.findOne({ email: req.body.email });
             if (!user) {
                 return res.status(400).send({ status: 'error', message: "Email này chưa được đăng ký " });
             }
