@@ -84,7 +84,7 @@ module.exports = {
         path: 'units',
         populate: {
           path: 'creator',
-          model: 'User'
+          model: 'user'
         }
       })
       .then((data) => {
