@@ -4,7 +4,13 @@ const { findById } = require("../models/Unit");
 module.exports = {
   getAllTopics(req, res) {
     Topic.find({})
-      .populate("units")
+      .populate({
+        path: 'units',
+        populate: {
+          path: 'creator',
+          model: 'user'
+        }
+      })
       .then((data) => {
         console.log("got all topics");
         res.send(data);
@@ -16,15 +22,15 @@ module.exports = {
   },
   getTopicsByID(req, res) {
     Topic.findById(req.params.id)
-    .populate("units")
-    .then((data) => {
-      console.log("get topic by topic_id");
-      res.send(data);
-    })
-    .catch((err) =>{
-      console.log("err", err);
-      res.send([]);
-    });
+      .populate("units")
+      .then((data) => {
+        console.log("get topic by topic_id");
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send([]);
+      });
   },
   createTopic(req, res) {
     console.log("create topics");
@@ -43,3 +49,4 @@ module.exports = {
       });
   },
 };
+
