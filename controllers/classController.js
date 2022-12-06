@@ -80,7 +80,13 @@ module.exports = {
     Class.find({ jcode: req.body.jcode })
       .populate("creator")
       .populate("members")
-      .populate("units")
+      .populate({
+        path: 'units',
+        populate: {
+          path: 'creator',
+          model: 'User'
+        }
+      })
       .then((data) => {
         res.send(data);
         console.log("got the class has jcode " + req.body.jcode);
