@@ -114,7 +114,7 @@ const userController = {
     //Get by id
     getUserByID: async (req, res) => {
         User.findById(req.body.id)
-            .populate("Insignia")
+            .populate("insignia")
             .then((data) => {
                 console.log("got the user has id " + req.body.id);
                 res.send(data);
