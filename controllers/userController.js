@@ -184,6 +184,23 @@ const userController = {
                 console.log("err", err);
             })
     },
+    changePassword : async (req, res) => {
+        const { email, oldPassword, newPassword } = req.body
+        const user = await User.findOne({ email: req.body.email });
+        if (Bcrypt.compareSync(oldPassword, user.password)) {
+            const hashNewPassword = Bcrypt.hashSync(newPassword, 10);
+            await User.updateOne({email: email},{password: hashNewPassword});
+            return res.json({
+                staus: "SUCCESS",
+                message: `Password change successfuly!`,
+            })
+        } else {
+            return res.json({
+                status: "FAILD",
+                message: `Password invalid`
+            })
+        }
+    }
 };
 
 module.exports = userController;
