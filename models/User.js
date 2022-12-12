@@ -26,14 +26,6 @@ const Userschema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    flashcardCreated: {
-      type: Number,
-      default: 0,
-    },
-    scores: {
-      type: Number,
-      default: 0,
-    },
     dayActive: {
       type: Number,
       default: 0,
@@ -46,9 +38,9 @@ const Userschema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    coin: {
+      type: Number,
+      default: 0,
     },
   },
 );
