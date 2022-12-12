@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Bcrypt = require("bcryptjs");
-const Insignia = require("../models/Insignia");
+const Unit = require("../models/Unit");
+const Class = require("../models/Class")
 const jwt = require("jsonwebtoken");
 const {
     generateOTP,
@@ -168,36 +169,52 @@ const userController = {
             res.status(500).json(err);// HTTP REQUEST CODE
         }
     },
-    searchUser(req, res) {
-        User.aggregate([{
-            $match: {
-                $text: {
-                    $search: "/" + req.params.keyword + "/"
-                },
-            }
-        }])
-            .then((data) => {
-                res.send(data);
-                console.log("get user by email");
+    searchUser: async (req, res) => {
+        await User.find({ email: { '$regex': req.body.keyword, '$options': 'i' }  })
+            .populate("insignia")
+            .then(async (data) => {
+                const userData = await Promise.all(data.map(async e => {
+                   const unitLength = (await Unit.find({mode: true, creator: e._id})).length
+                   const classLength = (await Class.find({mode: true, creator: e._id})).length
+                   return {...e._doc,unitLength: unitLength,classLength: classLength  }
+                }))
+                res.send(userData);
             })
             .catch((err) => {
                 console.log("err", err);
-            })
+            });
     },
-    changePassword : async (req, res) => {
+    changePassword: async (req, res) => {
         const { email, oldPassword, newPassword } = req.body
         const user = await User.findOne({ email: req.body.email });
         if (Bcrypt.compareSync(oldPassword, user.password)) {
             const hashNewPassword = Bcrypt.hashSync(newPassword, 10);
-            await User.updateOne({email: email},{password: hashNewPassword});
+            await User.updateOne({ email: email }, { password: hashNewPassword });
             return res.json({
-                staus: "SUCCESS",
+                status: "SUCCESS",
                 message: `Password change successfuly!`,
             })
         } else {
             return res.json({
                 status: "FAILD",
                 message: `Password invalid`
+            })
+        }
+    },
+    updateProfile: async (req, res) => {
+        const { email, fullname } = req.body
+        const user = await User.findOne({ _id: req.body.id });
+        console.log("USER", user);
+        if (email === "" && fullname === "") {
+            return res.json({
+                status: "FAILD",
+                message: `User invalid`
+            })
+        } else {
+            await User.updateOne({ email: email }, { fullname: fullname });
+            return res.json({
+                status: "SUCCESS",
+                message: `User update successfuly`,
             })
         }
     }

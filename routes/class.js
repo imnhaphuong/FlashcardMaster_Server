@@ -16,9 +16,7 @@ router.post("/update", (req, res) => {
   controller.updateClass(req, res);
 });
 
-router.get("/search/:keyword", (req, res) => {
-  controller.searchClass(req, res);
-});
+router.post("/keyword",controller.searchClass);
 router.get("/", (req, res) => {
   controller.getAllClasses(req, res);
 });
