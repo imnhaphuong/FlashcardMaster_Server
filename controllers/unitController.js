@@ -42,7 +42,7 @@ const unitController = {
         res.send([]);
       });
   },
-  createUnit: async(req, res) =>{
+  createUnit: async (req, res) => {
     console.log("create unit");
     const arrFcard = [];
     try {
@@ -96,18 +96,13 @@ const unitController = {
   },
 
   searchUnit(req, res) {
-    Unit.aggregate([
-      {
-        $match: {
-          $text: {
-            $search: "/" + req.params.keyword + "/",
-          },
-        },
-      },
-    ])
+    Unit.find({ mode: true, unitName: { '$regex': req.body.keyword, '$options': 'i' } })
+      .populate("flashcards")
+      .populate("creator")
+      .populate("topic")
       .then((data) => {
+        console.log("got the units has name extend " + req.body.keyword);
         res.send(data);
-        console.log("get unit by classname");
       })
       .catch((err) => {
         console.log("err", err);
@@ -115,9 +110,9 @@ const unitController = {
   },
   updateUnit: async (req, res) => {
     const { _id, flashcards, unitName, mode } = req.body;
-    let {topic}=req.body;
-    if(typeof topic =="object"){
-      topic=req.body.topic.value;
+    let { topic } = req.body;
+    if (typeof topic == "object") {
+      topic = req.body.topic.value;
     }
     try {
       const unit = await Unit.findById(_id)
@@ -134,29 +129,29 @@ const unitController = {
           console.log(err)
         });
 
-        const add_Topic = await Topic.findById(topic)  
+        const add_Topic = await Topic.findById(topic)
         add_Topic.units.push(unit._id)
         add_Topic.save().catch((err) => {
           console.log(err)
         });
         unit.topic = topic;
-      }else{
-        unit.topic=topic;
+      } else {
+        unit.topic = topic;
       }
 
       flashcards.map(async (item, index) => {
-        if (item._id!=='') {
+        if (item._id !== '') {
           const fcard = await Flashcard.findById(item._id)
-          console.log("fcard",fcard)
+          console.log("fcard", fcard)
           fcard.term = item.term;
           fcard.define = item.define;
           fcard.example = item.examplep;
           fcard.image = item.image;
-          
+
           fcard.save().catch((err) => {
             console.log(err)
           });
-          console.log("old",fcard)
+          console.log("old", fcard)
         } else {
           const new_fcard = new Flashcard({
             term: item.term,
@@ -182,14 +177,14 @@ const unitController = {
       res.status(500).send(err);
     };
   },
-    
+
   deleteUnit: async (req, res) => {
     console.log("delete Unit")
     const { _id } = req.body
-    try {    
-      const unit = await Unit.findById(_id)    
+    try {
+      const unit = await Unit.findById(_id)
       unit.flashcards.map(async (item, index) => {
-        console.log("item_id",item);
+        console.log("item_id", item);
         await Flashcard.findByIdAndDelete(item)
       })
       await Unit.findByIdAndDelete(_id)

@@ -14,9 +14,7 @@ router.post("/id", (req, res) => {
   unitController.getUnitById(req, res);
 });
 
-router.get("/search/:keyword", (req, res) => {
-  unitController.searchUnit(req, res);
-});
+router.post("/keyword", unitController.searchUnit)
 router.put("/update", unitController.updateUnit);
 router.post("/deleted", unitController.deleteUnit);
 

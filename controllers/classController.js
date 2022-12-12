@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 
 module.exports = {
- getAllClasses(req, res) {
+  getAllClasses(req, res) {
     Class.find({})
       .populate("creator")
       .populate("members")
@@ -97,22 +97,17 @@ module.exports = {
   },
 
   searchClass(req, res) {
-    Class.aggregate([
-      {
-        $match: {
-          $text: {
-            $search: "/" + req.params.keyword + "/",
-          },
-        },
-      },
-    ])
+    Class.find({ mode: true, name: { '$regex': req.body.keyword, '$options': 'i' } })
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((data) => {
+        console.log("got the classes has name extend " + req.body.keyword);
         res.send(data);
-        console.log("get class by name");
       })
       .catch((err) => {
         console.log("err", err);
-      });
+    });
   },
   impUnit(req, res) {
     Class.findByIdAndUpdate(req.body.id, {
@@ -129,9 +124,9 @@ module.exports = {
   getAllCreatedClasses(req, res) {
     let result = {};
     Class.find({ creator: req.body.creator, mode: true })
-    .populate("creator")
-    .populate("members")
-    .populate("units")
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((publicData) => {
         console.log("got all created classes public");
         result.public = publicData;
@@ -187,5 +182,5 @@ module.exports = {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  } 
+  }
 };

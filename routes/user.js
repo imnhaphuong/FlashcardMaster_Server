@@ -12,9 +12,8 @@ router.post("/type-personal", userController.choosePersonal);
 router.post("/send-verification", userController.sendVerificationEmaail);
 router.post("/changepassword", userController.changePassword);
 router.post("/signinGG", userController.signIn);
-router.get("/search/:keyword", (req, res) => {
-  userController.searchUser(req, res);
-});
+router.post("/updateProfile",userController.updateProfile);
+router.post("/keyword", userController.searchUser);
 router.get("/", userController.getAllUser);
 
 
