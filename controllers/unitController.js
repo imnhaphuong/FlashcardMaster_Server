@@ -81,19 +81,6 @@ const unitController = {
       res.status(500).send(err);
     }
   },
-  //get units are created by creator (use to get units are created by current user/account)
-  getAllUnitsCreatedByCreator(req, res) {
-    Unit.find({ creator: req.body.creator })
-      .then((data) => {
-        console.log("got all units created by " + req.body.creator);
-        res.send(data);
-      })
-      .catch((err) => {
-        console.log("err", err);
-        res.send([]);
-      });
-  },
-
   //need to pass an array unit id and
   getUnitById(req, res) {
     Unit.findById(req.body.id)

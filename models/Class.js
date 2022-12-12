@@ -2,17 +2,6 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Unit = require("../models/Unit");
 
-function makeJCode(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 const ClassSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -46,7 +35,6 @@ const ClassSchema = new mongoose.Schema({
     type: String,
     trim: true,
     unique: [true, "code already exists in database!"],
-    default: makeJCode(12),
   },
   created: {
     type: Date,

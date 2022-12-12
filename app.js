@@ -10,7 +10,8 @@ const port = process.env.PORT || 3000;
 const unitAPI = require("./routes/unit");
 const classAPI = require("./routes/class");
 const userAPI = require("./routes/user");
-const topicAPI = require("./routes/topic")
+const topicAPI = require("./routes/topic");
+const insigniaAPI = require("./routes/insignia");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,6 +24,7 @@ app.use("/api/users", userAPI);
 app.use("/api/topics",topicAPI);
 app.use("/api/units", unitAPI);
 app.use("/api/classes", classAPI);
+app.use("/api/insigniaes", insigniaAPI);
 
 //Kết nối mongodb
 const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.i3iqx2l.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;

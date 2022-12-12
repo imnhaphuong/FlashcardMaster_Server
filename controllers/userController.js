@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Bcrypt = require("bcryptjs");
+const Insignia = require("../models/Insignia");
 const jwt = require("jsonwebtoken");
 const {
     generateOTP,
@@ -9,6 +10,7 @@ const {
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
 const { default: ShortUniqueId } = require('short-unique-id');
+const { request } = require("express");
 const uid = new ShortUniqueId({
     dictionary: [
         '0', '1', '2', '3',
@@ -45,7 +47,7 @@ const userController = {
         await mailTransport(email, OTP)
         await verificationToken.save();
         await newUser.save();
-        
+
         res.status(200);// HTTP REQUEST CODE
 
         res.json({ status: 'ok', user: newUser })
@@ -111,18 +113,21 @@ const userController = {
     },
     //Get by id
     getUserByID: async (req, res) => {
-        try {
-            User.findById(req.body).then(data => res.send(data));
-        } catch (err) {
-            console.log(err);
-            res.send([])
-        }
+        User.findById(req.body.id)
+            .populate("insignia")
+            .then((data) => {
+                console.log("got the user has id " + req.body.id);
+                res.send(data);
+            })
+            .catch((err) => {
+                console.log("err", err);
+            });
     },
     //getAllUser
     getAllUser: async (req, res) => {
         try {
             // const UserByID = new User(req.body);        
-            User.find({}).then(data => res.send(data));
+            User.find({}).populate("insignia").then(data => res.send(data));
         } catch (err) {
             res.status(500).json(err);// HTTP REQUEST CODE
 
@@ -178,6 +183,23 @@ const userController = {
             .catch((err) => {
                 console.log("err", err);
             })
+    },
+    changePassword : async (req, res) => {
+        const { email, oldPassword, newPassword } = req.body
+        const user = await User.findOne({ email: req.body.email });
+        if (Bcrypt.compareSync(oldPassword, user.password)) {
+            const hashNewPassword = Bcrypt.hashSync(newPassword, 10);
+            await User.updateOne({email: email},{password: hashNewPassword});
+            return res.json({
+                staus: "SUCCESS",
+                message: `Password change successfuly!`,
+            })
+        } else {
+            return res.json({
+                status: "FAILD",
+                message: `Password invalid`
+            })
+        }
     }
 };
 

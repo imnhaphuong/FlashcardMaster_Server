@@ -1,7 +1,9 @@
 const Class = require("../models/Class");
+const User = require("../models/User");
+
 
 module.exports = {
-  getAllClasses(req, res) {
+ getAllClasses(req, res) {
     Class.find({})
       .populate("creator")
       .populate("members")
@@ -36,13 +38,14 @@ module.exports = {
       name: req.body.name,
       creator: req.body.creator,
       mode: req.body.mode,
-      members: [req.body.creator]
+      members: [req.body.creator],
+      jcode: this.makeJCode(12),
     });
     my_class
       .save()
       .then((data) => {
         res.send(data);
-        console.log("create new class success");
+        console.log(`create new class ${data.jcode} success`);
       })
       .catch((err) => {
         console.log("err", err);
@@ -77,7 +80,13 @@ module.exports = {
     Class.find({ jcode: req.body.jcode })
       .populate("creator")
       .populate("members")
-      .populate("units")
+      .populate({
+        path: 'units',
+        populate: {
+          path: 'creator',
+          model: 'user'
+        }
+      })
       .then((data) => {
         res.send(data);
         console.log("got the class has jcode " + req.body.jcode);
@@ -117,6 +126,34 @@ module.exports = {
         console.log("err", err);
       });
   },
+  getAllCreatedClasses(req, res) {
+    let result = {};
+    Class.find({ creator: req.body.creator, mode: true })
+    .populate("creator")
+    .populate("members")
+    .populate("units")
+      .then((publicData) => {
+        console.log("got all created classes public");
+        result.public = publicData;
+        Class.find({ creator: req.body.creator, mode: false })
+          .populate("creator")
+          .populate("members")
+          .populate("units")
+          .then((privateData) => {
+            console.log("got all created classes private");
+            result.private = privateData;
+            res.send(result);
+          })
+          .catch((err) => {
+            console.log("err", err);
+            res.send(result);
+          });
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send([]);
+      });
+  },
   join(req, res) {
     Class.findByIdAndUpdate(req.body.id, {
       $addToSet: { members: req.body.member },
@@ -141,4 +178,14 @@ module.exports = {
         console.log("err", err);
       });
   },
+  makeJCode(length) {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_-+=";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  } 
 };

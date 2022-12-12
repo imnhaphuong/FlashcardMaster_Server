@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Insignia = require("../models/Insignia")
 
 const Userschema = new mongoose.Schema(
   {
@@ -42,6 +43,10 @@ const Userschema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    insignia:[{
+      type: String,
+      ref: Insignia,
+    }]
   },
 );
 
