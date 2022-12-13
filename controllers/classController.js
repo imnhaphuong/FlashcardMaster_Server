@@ -149,6 +149,18 @@ module.exports = {
         res.send([]);
       });
   },
+  addUnitToClass(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      $addToSet: { units: req.body.unit },
+    })
+      .then((data) => {
+        console.log("updated units of the class" + req.body.id);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  },
   join(req, res) {
     Class.findByIdAndUpdate(req.body.id, {
       $addToSet: { members: req.body.member },
