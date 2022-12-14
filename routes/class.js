@@ -16,7 +16,7 @@ router.post("/update", (req, res) => {
   controller.updateClass(req, res);
 });
 
-router.post("/keyword",controller.searchClass);
+router.post("/keyword", controller.searchClass);
 router.get("/", (req, res) => {
   controller.getAllClasses(req, res);
 });
@@ -33,14 +33,16 @@ router.post("/imp", (req, res) => {
   controller.impUnit(req, res);
 });
 
-router.post("/created",(req,res) => {
-  controller.getAllCreatedClasses(req,res);
-})
+router.post("/created", (req, res) => {
+  controller.getAllCreatedClasses(req, res);
+});
 router.post("/kick", (req, res) => {
   controller.kick(req, res);
 });
 router.post("/join", (req, res) => {
   controller.join(req, res);
 });
-
+router.post("/addunit", (req, res) => {
+  controller.addUnitToClass(req, res);
+});
 module.exports = router;
