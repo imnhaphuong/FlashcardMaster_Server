@@ -20,6 +20,24 @@ module.exports = {
         res.send([]);
       });
   },
+  getTopicsByName(req, res) {
+    Topic.find({name: req.body.name})
+      .populate({
+        path: 'units',
+        populate: {
+          path: 'creator',
+          model: 'user'
+        }
+      })
+      .then((data) => {
+        console.log("got topics by name is " + req.body.name);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send([]);
+      });
+  },
   getTopicsByID(req, res) {
     Topic.findById(req.params.id)
       .populate("units")
@@ -48,5 +66,6 @@ module.exports = {
         console.log("err", err);
       });
   },
+
 };
 

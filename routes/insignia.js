@@ -6,4 +6,5 @@ const controller = require("../controllers/insigniaController");
 router.get("/", (req, res) => {
     controller.getAllInsignias(req, res);
 }),
-    module.exports = router;
+    module.exports = router;　
+   
