@@ -240,10 +240,9 @@ const userController = {
     },
     updateFullname: async (req, res) => {
         try {
-            User.findByIdAndUpdate({ _id: req.body.Userid }, { fullname: req.body.fullname })
-                .then((data) => {
-                    res.send(data)
-                });
+            await User.updateOne({ _id: req.body.Userid }, { fullname: req.body.fullname })
+            const data = await User.findById(req.body.Userid)
+            res.send(data)
         } catch (err) {
             console.log("ERR", err);
         }
