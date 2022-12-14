@@ -8,7 +8,6 @@ const {
     mailTransport,
     mailTransportAgain,
     mailTransportRespone,
-    mailTransportResponeAgain,
 } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
@@ -21,8 +20,6 @@ const uid = new ShortUniqueId({
         '8', '9'
     ],
 });
-
-
 
 const userController = {
     //Create
@@ -258,6 +255,26 @@ const userController = {
             console.log("ERR", err);
         }
     },
+    buyInsignia: async (req, res) => {
+        try {
+            const { userId, coin, price, insigniaId } = req.body
+            if (coin >= price) {
+                var newCoin = coin - price
+                const user = await User.updateMany({ userId }, { coin: newCoin, $addToSet: { insignia: insigniaId } })
+                if (user) {
+                    const data = await User.findById(userId)
+                    res.send(data)
+                }
+            } else {
+                res.json({
+                    status: 'ERROR',
+                    message: "Không đủ xu! Hãy làm bài test để kiếm thêm xu nhé"
+                })
+            }
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    }
 };
 
 module.exports = userController;

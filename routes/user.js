@@ -17,6 +17,7 @@ router.post("/signinGG", userController.signIn);
 router.post("/updateFullname",userController.updateFullname);
 router.post("/updateEmail",userController.updateEmail);
 router.post("/keyword", userController.searchUser);
+router.post("/buyInsignia", userController.buyInsignia);
 router.get("/", userController.getAllUser);
 
 
