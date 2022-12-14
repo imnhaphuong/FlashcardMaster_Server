@@ -10,9 +10,12 @@ router.post("/verify-email", userController.verifyEmail);
 router.post("/type-class", userController.chooseClass);
 router.post("/type-personal", userController.choosePersonal);
 router.post("/send-verification", userController.sendVerificationEmaail);
+router.post("/sendVerifyAgain", userController.sendVerificationEmailAgain);
+router.post("/verifyEmailAgain", userController.verifyEmailAgain);
 router.post("/changepassword", userController.changePassword);
 router.post("/signinGG", userController.signIn);
-router.post("/updateProfile",userController.updateProfile);
+router.post("/updateFullname",userController.updateFullname);
+router.post("/updateEmail",userController.updateEmail);
 router.post("/keyword", userController.searchUser);
 router.get("/", userController.getAllUser);
 

@@ -6,7 +6,9 @@ const jwt = require("jsonwebtoken");
 const {
     generateOTP,
     mailTransport,
+    mailTransportAgain,
     mailTransportRespone,
+    mailTransportResponeAgain,
 } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
 const { isValidObjectId } = require("mongoose");
@@ -91,6 +93,41 @@ const userController = {
         await mailTransportRespone(user.email)
         res.json({ status: 'success', message: "Xác nhận thành công" })
     },
+    sendVerificationEmailAgain: async (req, res) => {
+        const { userId, email } = req.body
+        const OTP = generateOTP()
+        const token = await VerificationToken.findOne({ owner: userId })
+        if (token !== null) {
+            await VerificationToken.findByIdAndDelete(token._id)
+        }
+        const verificationToken = new VerificationToken({
+            owner: userId,
+            token: OTP
+        })
+        console.log("OTP", OTP);
+        await verificationToken.save();
+        await mailTransportAgain(email, OTP)
+        res.status(200);// HTTP REQUEST CODE
+        res.json({ status: 'ok' })
+    },
+    verifyEmailAgain: async (req, res) => {
+        const { userId, otp } = req.body
+        const token = await VerificationToken.findOne({ owner: userId })
+        const isMatched = await token.compareToken(otp)
+        if (!isMatched) {
+            return res.json({
+                status: 'ERROR',
+                message: 'Mã OTP không đúng'
+            });
+        }
+        else {
+            res.json({
+                status: 'success',
+                message: "Xác nhận thành công"
+            });
+            await VerificationToken.findByIdAndDelete(token._id)
+        }
+    },
     //sign in
     signIn: async (req, res) => {
         try {
@@ -170,13 +207,13 @@ const userController = {
         }
     },
     searchUser: async (req, res) => {
-        await User.find({ email: { '$regex': req.body.keyword, '$options': 'i' }  })
+        await User.find({ email: { '$regex': req.body.keyword, '$options': 'i' } })
             .populate("insignia")
             .then(async (data) => {
                 const userData = await Promise.all(data.map(async e => {
-                   const unitLength = (await Unit.find({mode: true, creator: e._id})).length
-                   const classLength = (await Class.find({mode: true, creator: e._id})).length
-                   return {...e._doc,unitLength: unitLength,classLength: classLength  }
+                    const unitLength = (await Unit.find({ mode: true, creator: e._id })).length
+                    const classLength = (await Class.find({ mode: true, creator: e._id })).length
+                    return { ...e._doc, unitLength: unitLength, classLength: classLength }
                 }))
                 res.send(userData);
             })
@@ -201,23 +238,27 @@ const userController = {
             })
         }
     },
-    updateProfile: async (req, res) => {
-        const { email, fullname } = req.body
-        const user = await User.findOne({ _id: req.body.id });
-        console.log("USER", user);
-        if (email === "" && fullname === "") {
-            return res.json({
-                status: "FAILD",
-                message: `User invalid`
-            })
-        } else {
-            await User.updateOne({ email: email }, { fullname: fullname });
-            return res.json({
-                status: "SUCCESS",
-                message: `User update successfuly`,
-            })
+    updateFullname: async (req, res) => {
+        try {
+            User.findByIdAndUpdate({ _id: req.body.Userid }, { fullname: req.body.fullname })
+                .then((data) => {
+                    res.send(data)
+                });
+        } catch (err) {
+            console.log("ERR", err);
         }
-    }
+    },
+    updateEmail: async (req, res) => {
+        try {
+            User.findByIdAndUpdate({ _id: req.body.userId }, { email: req.body.email })
+                .then((data) => {
+                    res.send(data)
+                    //console.log("Đã cập nhật email mới vào server");
+                });
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    },
 };
 
 module.exports = userController;
