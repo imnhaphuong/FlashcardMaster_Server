@@ -1,7 +1,8 @@
 const User = require("../models/User");
 const Bcrypt = require("bcryptjs");
 const Unit = require("../models/Unit");
-const Class = require("../models/Class")
+const Class = require("../models/Class");
+const Insignia = require("../models/Insignia")
 const jwt = require("jsonwebtoken");
 const {
     generateOTP,
@@ -257,24 +258,25 @@ const userController = {
     },
     buyInsignia: async (req, res) => {
         try {
-            const { userId, coin, price, insigniaId } = req.body
-            if (coin >= price) {
-                var newCoin = coin - price
-                const user = await User.updateMany({ userId }, { coin: newCoin, $addToSet: { insignia: insigniaId } })
-                if (user) {
-                    const data = await User.findById(userId)
-                    res.send(data)
-                }
+            const { userId, insigniaId } = req.body
+            const user = await User.findById(userId)
+            const insignia = await Insignia.findById(insigniaId)
+            console.log("USER", user);
+            console.log("HUYHIEu", insignia);
+            if (user.coin >= insignia.price) {
+                var newCoin = user.coin - insignia.price
+                await User.updateOne({_id:userId },{ coin: newCoin }, { $addToSet: { insignia: insigniaId } })
+                const data = await User.findById(userId)
+                res.send(data)
             } else {
-                res.json({
-                    status: 'ERROR',
-                    message: "Không đủ xu! Hãy làm bài test để kiếm thêm xu nhé"
+                return res.json({
+                    status: "ERROR",
+                    message: `không đủ xu`
                 })
             }
         } catch (err) {
             console.log("ERR", err);
         }
-    }
-};
-
-module.exports = userController;
+    },
+}
+    module.exports = userController;
