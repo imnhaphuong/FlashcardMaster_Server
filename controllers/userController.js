@@ -265,7 +265,7 @@ const userController = {
             console.log("HUYHIEu", insignia);
             if (user.coin >= insignia.price) {
                 var newCoin = user.coin - insignia.price
-                await User.updateOne({_id:userId },{ coin: newCoin }, { $addToSet: { insignia: insigniaId } })
+                await User.updateOne({_id:userId },{ coin: newCoin ,  $addToSet: { insignia: insigniaId } })
                 const data = await User.findById(userId)
                 res.send(data)
             } else {
