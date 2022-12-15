@@ -13,14 +13,4 @@ module.exports = {
                 res.send([]);
             });
     },
-    // buy: async (req, res) => {
-    //     var ID = req.body.Userid
-    //     var price = req.body.price
-    //     const user = await User.findByIdAndUpdate({ _id: ID });
-    //     if (user.coin >= price) {
-    //         var newCoin = user.coin - price
-    //     } else {
-            
-    //     }
-    // }
 }
