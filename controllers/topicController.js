@@ -5,6 +5,7 @@ module.exports = {
   getAllTopics(req, res) {
     Topic.find({})
       .populate({
+        match: { mode: true },
         path: 'units',
         populate: {
           path: 'creator',

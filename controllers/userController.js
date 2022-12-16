@@ -245,6 +245,15 @@ const userController = {
             console.log("ERR", err);
         }
     },
+    updateAvatar: async (req, res) => {
+        try {
+            await User.updateOne({ _id: req.body.Userid }, { avatar: req.body.avatar })
+            const data = await User.findById(req.body.Userid)
+            res.send(data)
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    },
     updateEmail: async (req, res) => {
         try {
             User.findByIdAndUpdate({ _id: req.body.userId }, { email: req.body.email })
@@ -256,6 +265,7 @@ const userController = {
             console.log("ERR", err);
         }
     },
+
     buyInsignia: async (req, res) => {
         try {
             const { userId, insigniaId } = req.body
