@@ -20,7 +20,7 @@ router.get("/search/:keyword", (req, res) => {
 router.put("/update", unitController.updateUnit);
 router.post("/deleted", unitController.deleteUnit);
 
-
+router.post("/deFcard", unitController.deleteFcard);
 router.post("/add", (req, res) => {
   unitController.addToClass(req, res);
 });

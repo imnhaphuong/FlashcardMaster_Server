@@ -21,7 +21,7 @@ const Userschema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "",
+      default: "https://res.cloudinary.com/flashcardmaster/image/upload/v1671123911/defaultAvatar_wasqqt.png",
     },
     unitCreated: {
       type: Number,

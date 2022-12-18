@@ -42,8 +42,9 @@ const unitController = {
         res.send([]);
       });
   },
-  createUnit: async(req, res) =>{
+  createUnit: async (req, res) => {
     console.log("create unit");
+    let verify = true;
     const arrFcard = [];
     try {
       const { flashcards, topic } = req.body
@@ -52,30 +53,39 @@ const unitController = {
         return res.json({ status: 'error', error: 'Vui lòng chọn một chủ đề' })
       }
       flashcards.map((item, index) => {
-        const new_fcard = new Flashcard({
-          term: item.term,
-          define: item.define,
-          example: item.example,
-          image: item.image,
+        if (item.term === "" && item.define === "" && flashcards.length === 1 || item.term !== "" && item.define === "" || item.term === "" && item.define !== "") {
+          verify = false;
+          return res.json({ status: 'error', error: 'Thuật ngữ và định nghĩa không được để trống!' })
+        } else {
+          if (item.term !== "" && item.define !== "") {
+            const new_fcard = new Flashcard({
+              term: item.term,
+              define: item.define,
+              example: item.example,
+              image: item.image,
+            });
+            arrFcard.push(new_fcard._id);
+            new_fcard.save();
+          }
+        }
+
+      });
+      if (verify === true) {
+        const new_unit = new Unit({
+          unitName: req.body.unitName,
+          creator: req.body.userId,
+          mode: req.body.mode,
+          topic: topic,
+          flashcards: arrFcard,
         });
-        arrFcard.push(new_fcard._id);
-        new_fcard.save();
-      });
-      const new_unit = new Unit({
-        unitName: req.body.unitName,
-        creator: req.body.userId,
-        fullname: req.body.fullname,
-        mode: req.body.mode,
-        topic: topic,
-        flashcards: arrFcard,
-      });
-      const add_Topic = await Topic.findById(topic)
-      add_Topic.units.push(new_unit._id)
-      add_Topic.save()
-      new_unit.save().then((data) => {
-        res.send(data);
-        console.log("create new unit success");
-      });
+        const add_Topic = await Topic.findById(topic)
+        add_Topic.units.push(new_unit._id)
+        add_Topic.save()
+        new_unit.save().then((data) => {
+          res.send(data);
+          console.log("create new unit success");
+        });
+      }
     } catch (err) {
       console.log("err", err);
       res.status(500).send(err);
@@ -115,9 +125,10 @@ const unitController = {
   },
   updateUnit: async (req, res) => {
     const { _id, flashcards, unitName, mode } = req.body;
-    let {topic}=req.body;
-    if(typeof topic =="object"){
-      topic=req.body.topic.value;
+    let { topic } = req.body;
+    let verify = true;
+    if (typeof topic == "object") {
+      topic = req.body.topic.value;
     }
     try {
       const unit = await Unit.findById(_id)
@@ -134,62 +145,75 @@ const unitController = {
           console.log(err)
         });
 
-        const add_Topic = await Topic.findById(topic)  
+        const add_Topic = await Topic.findById(topic)
         add_Topic.units.push(unit._id)
         add_Topic.save().catch((err) => {
           console.log(err)
         });
         unit.topic = topic;
-      }else{
-        unit.topic=topic;
+      } else {
+        unit.topic = topic;
       }
 
       flashcards.map(async (item, index) => {
-        if (item._id!=='') {
-          const fcard = await Flashcard.findById(item._id)
-          console.log("fcard",fcard)
-          fcard.term = item.term;
-          fcard.define = item.define;
-          fcard.example = item.examplep;
-          fcard.image = item.image;
-          
-          fcard.save().catch((err) => {
-            console.log(err)
-          });
-          console.log("old",fcard)
+        if (item.term === "" && item.define === "" && flashcards.length === 1 || item.term !== "" && item.define === "" || item.term === "" && item.define !== "") {
+          verify = false;
+          return res.json({ status: 'error', error: 'Thuật ngữ và định nghĩa không được để trống!' })
         } else {
-          const new_fcard = new Flashcard({
-            term: item.term,
-            define: item.define,
-            example: item.example,
-            image: item.image,
-          });
-          unit.flashcards.push(new_fcard._id);
-          console.log("new", unit.flashcards)
-          new_fcard.save();
+          if (item._id !== '') {
+            const fcard = await Flashcard.findById(item._id)
+            if (item.term !== "" && item.define !== "") {
+              fcard.term = item.term;
+              fcard.define = item.define;
+              fcard.example = item.examplep;
+              fcard.image = item.image;
+
+              fcard.save().catch((err) => {
+                console.log(err)
+              });
+              console.log("old", fcard)
+            }
+
+
+          } else {
+            if (item.term !== "" && item.define !== "") {
+              const new_fcard = new Flashcard({
+                term: item.term,
+                define: item.define,
+                example: item.example,
+                image: item.image,
+              });
+              unit.flashcards.push(new_fcard._id);
+              console.log("new", unit.flashcards)
+              new_fcard.save();
+            }
+          }
         }
       });
-      setTimeout(() => {
-        unit.save().
-          then((data) => {
-            res.status(200).send(data);
-            console.log("update new class success");
-          })
-      }, 2000)
+      if (verify === true) {
+        setTimeout(() => {
+          unit.save().
+            then((data) => {
+              res.status(200).send(data);
+              console.log("update new class success");
+            })
+        }, 2000)
+
+      }
 
     } catch (err) {
       console.log("err", err);
       res.status(500).send(err);
     };
   },
-    
+
   deleteUnit: async (req, res) => {
     console.log("delete Unit")
     const { _id } = req.body
-    try {    
-      const unit = await Unit.findById(_id)    
+    try {
+      const unit = await Unit.findById(_id)
       unit.flashcards.map(async (item, index) => {
-        console.log("item_id",item);
+        console.log("item_id", item);
         await Flashcard.findByIdAndDelete(item)
       })
       await Unit.findByIdAndDelete(_id)
@@ -213,5 +237,14 @@ const unitController = {
         console.log("err", err);
       });
   },
+  deleteFcard: async (req, res) => {
+    try {
+      await Flashcard.findByIdAndDelete(req.body)
+      return res.json({ status: '200', message: 'Xóa thành công' })
+    } catch (err) {
+      console.log("err", err);
+      res.status(500).send(err);
+    };
+  }
 };
 module.exports = unitController;
