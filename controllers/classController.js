@@ -4,19 +4,31 @@ const User = require("../models/User");
 
 module.exports = {
   getAllClasses(req, res) {
-    Class.find({})
+    const result = {}
+    Class.find({creator: req.body.userid})
       .populate("creator")
       .populate("members")
       .populate("units")
       .sort({ created: -1 })
-      .then((data) => {
+      .then((creat) => {
         console.log("got all classes");
-        res.send(data);
-      })
-      .catch((err) => {
+        result.data = creat
+        Class.find({members: req.body.userid})
+          .populate("creator")
+          .populate("members")
+          .populate("units")
+          .sort({ created: -1 })
+          .then((mem) => {
+            result.data = result.data.concat(mem) 
+            res.send(result);
+          }).catch((err) => {
+            console.log("err", err);
+            res.send(result);
+          })
+      }).catch((err) => {
         console.log("err", err);
-        res.send([]);
-      });
+        res.send(result);
+      })
   },
 
   getClassById(req, res) {

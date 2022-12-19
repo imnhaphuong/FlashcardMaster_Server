@@ -17,15 +17,17 @@ router.post("/update", (req, res) => {
 });
 
 router.post("/keyword", controller.searchClass);
-router.get("/", (req, res) => {
-  controller.getAllClasses(req, res);
-});
+// router.get("/", (req, res) => {
+//   controller.getAllClasses(req, res);
+// });
 
 router.post("/", (req, res) => {
   if (req.body.hasOwnProperty("jcode")) {
     controller.getClassByJCode(req, res);
   } else if (req.body.hasOwnProperty("id")) {
     controller.getClassById(req, res);
+  } else if (req.body.hasOwnProperty("userid")) {
+    controller.getAllClasses(req, res);
   }
 });
 
