@@ -5,6 +5,7 @@ module.exports = {
   getAllTopics(req, res) {
     Topic.find({})
       .populate({
+        match: { mode: true },
         path: 'units',
         populate: {
           path: 'creator',
@@ -13,6 +14,24 @@ module.exports = {
       })
       .then((data) => {
         console.log("got all topics");
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.send([]);
+      });
+  },
+  getTopicsByName(req, res) {
+    Topic.find({name: req.body.name})
+      .populate({
+        path: 'units',
+        populate: {
+          path: 'creator',
+          model: 'user'
+        }
+      })
+      .then((data) => {
+        console.log("got topics by name is " + req.body.name);
         res.send(data);
       })
       .catch((err) => {
@@ -48,5 +67,6 @@ module.exports = {
         console.log("err", err);
       });
   },
+
 };
 

@@ -49,6 +49,39 @@ exports.mailTransport = async (email, otp) => {
 
     return transport
 }
+exports.mailTransportAgain = async (email, otp) => {
+console.log("EMAIL", email);
+    try {
+        var transport = nodemailer.createTransport({
+            host: "smtp.office365.com",
+            port: 587,
+            auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_PASSWORD,
+            }
+        });
+        var mailOptions = {
+            from: 'FlashcardMaster<flmaster022@hotmail.com>',
+            to: email,
+            subject: "Xác nhận thay đổi địa chỉ email",
+            html: `<h1>Chào mừng bạn đến với Flashcard Master</h1>
+                    <h2>Mã OTP của bạn là</h2>
+                    <h2>${otp}</h2>     
+            `
+        }
+        transport.sendMail(mailOptions, (err, result) => {
+            if (err) {
+                console.log('err', err);
+            } else {
+                console.log("Thành công", result);
+            }
+            transport.close()
+        })
+    } catch (err) {
+        console.log(err);
+    }
+    return transport
+}
 exports.mailTransportRespone = async (email) => {
 
     try {

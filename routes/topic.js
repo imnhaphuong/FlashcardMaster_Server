@@ -9,6 +9,7 @@ router.get("/:id", (req, res) => {
 router.get("/", (req, res) => {
   controller.getAllTopics(req, res);
 }),
+router.post("/name",controller.getTopicsByName);
 router.post("/create", (req, res) => {
   controller.createTopic(req, res);
 }),

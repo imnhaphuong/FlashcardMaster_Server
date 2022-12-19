@@ -3,20 +3,32 @@ const User = require("../models/User");
 
 
 module.exports = {
- getAllClasses(req, res) {
-    Class.find({})
+  getAllClasses(req, res) {
+    const result = {}
+    Class.find({creator: req.body.userid})
       .populate("creator")
       .populate("members")
       .populate("units")
       .sort({ created: -1 })
-      .then((data) => {
+      .then((creat) => {
         console.log("got all classes");
-        res.send(data);
-      })
-      .catch((err) => {
+        result.data = creat
+        Class.find({members: req.body.userid})
+          .populate("creator")
+          .populate("members")
+          .populate("units")
+          .sort({ created: -1 })
+          .then((mem) => {
+            result.data = result.data.concat(mem) 
+            res.send(result);
+          }).catch((err) => {
+            console.log("err", err);
+            res.send(result);
+          })
+      }).catch((err) => {
         console.log("err", err);
-        res.send([]);
-      });
+        res.send(result);
+      })
   },
 
   getClassById(req, res) {
@@ -97,22 +109,17 @@ module.exports = {
   },
 
   searchClass(req, res) {
-    Class.aggregate([
-      {
-        $match: {
-          $text: {
-            $search: "/" + req.params.keyword + "/",
-          },
-        },
-      },
-    ])
+    Class.find({ mode: true, name: { '$regex': req.body.keyword, '$options': 'i' } })
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((data) => {
+        console.log("got the classes has name extend " + req.body.keyword);
         res.send(data);
-        console.log("get class by name");
       })
       .catch((err) => {
         console.log("err", err);
-      });
+    });
   },
   impUnit(req, res) {
     Class.findByIdAndUpdate(req.body.id, {
@@ -129,9 +136,9 @@ module.exports = {
   getAllCreatedClasses(req, res) {
     let result = {};
     Class.find({ creator: req.body.creator, mode: true })
-    .populate("creator")
-    .populate("members")
-    .populate("units")
+      .populate("creator")
+      .populate("members")
+      .populate("units")
       .then((publicData) => {
         console.log("got all created classes public");
         result.public = publicData;
@@ -152,6 +159,18 @@ module.exports = {
       .catch((err) => {
         console.log("err", err);
         res.send([]);
+      });
+  },
+  addUnitToClass(req, res) {
+    Class.findByIdAndUpdate(req.body.id, {
+      $addToSet: { units: req.body.unit },
+    })
+      .then((data) => {
+        console.log("updated units of the class" + req.body.id);
+        res.send(data);
+      })
+      .catch((err) => {
+        console.log("err", err);
       });
   },
   join(req, res) {
@@ -181,11 +200,11 @@ module.exports = {
   makeJCode(length) {
     var result = "";
     var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_-+=";
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  } 
+  }
 };

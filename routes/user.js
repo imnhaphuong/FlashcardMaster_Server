@@ -10,11 +10,15 @@ router.post("/verify-email", userController.verifyEmail);
 router.post("/type-class", userController.chooseClass);
 router.post("/type-personal", userController.choosePersonal);
 router.post("/send-verification", userController.sendVerificationEmaail);
+router.post("/sendVerifyAgain", userController.sendVerificationEmailAgain);
+router.post("/verifyEmailAgain", userController.verifyEmailAgain);
 router.post("/changepassword", userController.changePassword);
 router.post("/signinGG", userController.signIn);
-router.get("/search/:keyword", (req, res) => {
-  userController.searchUser(req, res);
-});
+router.post("/updateFullname",userController.updateFullname);
+router.post("/updateEmail",userController.updateEmail);
+router.post("/updateAvatar",userController.updateAvatar);
+router.post("/keyword", userController.searchUser);
+router.post("/buyInsignia", userController.buyInsignia);
 router.get("/", userController.getAllUser);
 
 

@@ -106,18 +106,13 @@ const unitController = {
   },
 
   searchUnit(req, res) {
-    Unit.aggregate([
-      {
-        $match: {
-          $text: {
-            $search: "/" + req.params.keyword + "/",
-          },
-        },
-      },
-    ])
+    Unit.find({ mode: true, unitName: { '$regex': req.body.keyword, '$options': 'i' } })
+      .populate("flashcards")
+      .populate("creator")
+      .populate("topic")
       .then((data) => {
+        console.log("got the units has name extend " + req.body.keyword);
         res.send(data);
-        console.log("get unit by classname");
       })
       .catch((err) => {
         console.log("err", err);

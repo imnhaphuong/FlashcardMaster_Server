@@ -1,10 +1,13 @@
 const User = require("../models/User");
 const Bcrypt = require("bcryptjs");
-const Insignia = require("../models/Insignia");
+const Unit = require("../models/Unit");
+const Class = require("../models/Class");
+const Insignia = require("../models/Insignia")
 const jwt = require("jsonwebtoken");
 const {
     generateOTP,
     mailTransport,
+    mailTransportAgain,
     mailTransportRespone,
 } = require("../utils/mail");
 const VerificationToken = require("../models/VerificationToken");
@@ -18,8 +21,6 @@ const uid = new ShortUniqueId({
         '8', '9'
     ],
 });
-
-
 
 const userController = {
     //Create
@@ -89,6 +90,41 @@ const userController = {
         await user.save();
         await mailTransportRespone(user.email)
         res.json({ status: 'success', message: "Xác nhận thành công" })
+    },
+    sendVerificationEmailAgain: async (req, res) => {
+        const { userId, email } = req.body
+        const OTP = generateOTP()
+        const token = await VerificationToken.findOne({ owner: userId })
+        if (token !== null) {
+            await VerificationToken.findByIdAndDelete(token._id)
+        }
+        const verificationToken = new VerificationToken({
+            owner: userId,
+            token: OTP
+        })
+        console.log("OTP", OTP);
+        await verificationToken.save();
+        await mailTransportAgain(email, OTP)
+        res.status(200);// HTTP REQUEST CODE
+        res.json({ status: 'ok' })
+    },
+    verifyEmailAgain: async (req, res) => {
+        const { userId, otp } = req.body
+        const token = await VerificationToken.findOne({ owner: userId })
+        const isMatched = await token.compareToken(otp)
+        if (!isMatched) {
+            return res.json({
+                status: 'ERROR',
+                message: 'Mã OTP không đúng'
+            });
+        }
+        else {
+            res.json({
+                status: 'success',
+                message: "Xác nhận thành công"
+            });
+            await VerificationToken.findByIdAndDelete(token._id)
+        }
     },
     //sign in
     signIn: async (req, res) => {
@@ -168,30 +204,29 @@ const userController = {
             res.status(500).json(err);// HTTP REQUEST CODE
         }
     },
-    searchUser(req, res) {
-        User.aggregate([{
-            $match: {
-                $text: {
-                    $search: "/" + req.params.keyword + "/"
-                },
-            }
-        }])
-            .then((data) => {
-                res.send(data);
-                console.log("get user by email");
+    searchUser: async (req, res) => {
+        await User.find({ email: { '$regex': req.body.keyword, '$options': 'i' } })
+            .populate("insignia")
+            .then(async (data) => {
+                const userData = await Promise.all(data.map(async e => {
+                    const unitLength = (await Unit.find({ mode: true, creator: e._id })).length
+                    const classLength = (await Class.find({ mode: true, creator: e._id })).length
+                    return { ...e._doc, unitLength: unitLength, classLength: classLength }
+                }))
+                res.send(userData);
             })
             .catch((err) => {
                 console.log("err", err);
-            })
+            });
     },
-    changePassword : async (req, res) => {
+    changePassword: async (req, res) => {
         const { email, oldPassword, newPassword } = req.body
         const user = await User.findOne({ email: req.body.email });
         if (Bcrypt.compareSync(oldPassword, user.password)) {
             const hashNewPassword = Bcrypt.hashSync(newPassword, 10);
-            await User.updateOne({email: email},{password: hashNewPassword});
+            await User.updateOne({ email: email }, { password: hashNewPassword });
             return res.json({
-                staus: "SUCCESS",
+                status: "SUCCESS",
                 message: `Password change successfuly!`,
             })
         } else {
@@ -200,7 +235,58 @@ const userController = {
                 message: `Password invalid`
             })
         }
-    }
-};
+    },
+    updateFullname: async (req, res) => {
+        try {
+            await User.updateOne({ _id: req.body.Userid }, { fullname: req.body.fullname })
+            const data = await User.findById(req.body.Userid)
+            res.send(data)
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    },
+    updateAvatar: async (req, res) => {
+        try {
+            await User.updateOne({ _id: req.body.Userid }, { avatar: req.body.avatar })
+            const data = await User.findById(req.body.Userid)
+            res.send(data)
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    },
+    updateEmail: async (req, res) => {
+        try {
+            User.findByIdAndUpdate({ _id: req.body.userId }, { email: req.body.email })
+                .then((data) => {
+                    res.send(data)
+                    //console.log("Đã cập nhật email mới vào server");
+                });
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    },
 
-module.exports = userController;
+    buyInsignia: async (req, res) => {
+        try {
+            const { userId, insigniaId } = req.body
+            const user = await User.findById(userId)
+            const insignia = await Insignia.findById(insigniaId)
+            console.log("USER", user);
+            console.log("HUYHIEu", insignia);
+            if (user.coin >= insignia.price) {
+                var newCoin = user.coin - insignia.price
+                await User.updateOne({_id:userId },{ coin: newCoin ,  $addToSet: { insignia: insigniaId } })
+                const data = await User.findById(userId)
+                res.send(data)
+            } else {
+                return res.json({
+                    status: "ERROR",
+                    message: `không đủ xu`
+                })
+            }
+        } catch (err) {
+            console.log("ERR", err);
+        }
+    },
+}
+    module.exports = userController;
